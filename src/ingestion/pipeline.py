@@ -1,11 +1,14 @@
 import os
 import uuid
+import tempfile
 from pyspark.sql.types import ArrayType, StructType, StructField, StringType, IntegerType
 import pyspark.sql.functions as F
 
 from src.config import DATA_DIR
 from src.connections.pinecone import PineconeConnectionManager
 from src.connections.spark import SparkSessionManager
+from src.connections.s3 import S3ConnectionManager
+from src.utils.token_tracker import TokenCostTracker
 from src.utils.logger import setup_logger
 
 logger = setup_logger("ingestion_pipeline")
@@ -63,49 +66,66 @@ class RAGIngestionPipeline:
     """
     Object-oriented ingestion pipeline that orchestrates cleaning, chunking,
     hashing, embedding calculation, and ingestion of documents using Spark.
+    Supports AWS S3 Data Lakes and Local directories.
     """
     def __init__(
         self,
         spark_manager: SparkSessionManager,
-        pinecone_manager: PineconeConnectionManager
+        pinecone_manager: PineconeConnectionManager,
+        s3_manager: S3ConnectionManager
     ):
         self.spark_manager = spark_manager
         self.pinecone_manager = pinecone_manager
+        self.s3_manager = s3_manager
 
-    def run(self, data_directory: str = DATA_DIR) -> int:
+    def run(self, data_directory: str = DATA_DIR, from_s3: bool = False) -> int:
         """
-        Executes the ingestion pipeline. Returns total count of chunks processed.
+        Executes the ingestion pipeline. 
+        If from_s3 is True, pulls files from S3 first.
+        Returns total count of chunks processed.
         """
-        # 1. Initialize Vector Database Index
-        logger.info("Initializing vector database schema/index in Pinecone...")
+        # 1. Sync from S3 Lakehouse if requested
+        if from_s3:
+            logger.info("Triggering S3 Lakehouse synchronization...")
+            self.s3_manager.sync_to_local(data_directory)
+            
+        # 2. Initialize Vector Database Index
+        logger.info("Initializing Pinecone Index schema...")
         self.pinecone_manager.setup_index()
         
-        # 2. Get active Spark context
+        # 3. Get active Spark context
         logger.info("Getting/Creating SparkSession...")
         spark = self.spark_manager.get_or_create_session()
         
         try:
-            raw_data_path = os.path.join(data_directory, "*.txt")
-            logger.info(f"Reading raw corporate logs from: '{raw_data_path}'")
+            raw_data_path = os.path.join(data_directory, "*")
+            logger.info(f"Reading raw logs / documents from: '{raw_data_path}'")
             
             # Load whole text files as (filepath, content) tuples
+            # Spark handles binary wholeTextFiles safely.
             rdd_raw = spark.sparkContext.wholeTextFiles(raw_data_path)
             df_raw = rdd_raw.toDF(["file_path", "raw_content"])
             
-            if df_raw.count() == 0:
-                logger.error(f"No source files found in data directory: {data_directory}")
-                raise FileNotFoundError(f"No files found at {raw_data_path}")
+            # Filter only txt and pdf files (PDF text parsing is handled by the PDF API uploader,
+            # while Spark handles raw text directories)
+            df_text = df_raw.filter(
+                (F.col("file_path").endswith(".txt")) | (F.col("file_path").endswith(".log"))
+            )
+            
+            if df_text.count() == 0:
+                logger.warning(f"No text files found in data directory: {data_directory}")
+                return 0
                 
-            # 3. Clean Text and Hash
-            df_clean = df_raw.withColumn(
+            # 4. Clean Text and Hash
+            df_clean = df_text.withColumn(
                 "cleaned_content", 
-                F.regexp_replace(F.trim(df_raw.raw_content), r"\s+", " ")
+                F.regexp_replace(F.trim(df_text.raw_content), r"\s+", " ")
             ).filter(F.col("cleaned_content") != "").withColumn(
                 "doc_id", 
                 F.sha2(F.col("cleaned_content"), 256)
             )
             
-            # 4. Chunking (using UDF + Recursive Chunker)
+            # 5. Chunking (using UDF + Recursive Chunker)
             def _get_chunks_wrapper(text):
                 from src.utils.chunker import RecursiveCharacterChunker
                 chunker = RecursiveCharacterChunker(chunk_size=500, chunk_overlap=50)
@@ -134,14 +154,21 @@ class RAGIngestionPipeline:
             )
             
             logger.info("Distributed embedding calculation starting in parallel partitions...")
-            # 5. Extract Embeddings (in parallel) and collect results back to the driver
+            # 6. Extract Embeddings (in parallel) and collect results back to the driver
             raw_points = df_chunks.rdd.mapPartitions(embed_partition).collect()
             total_chunks = len(raw_points)
+            
+            if total_chunks == 0:
+                logger.info("No text chunks generated.")
+                return 0
+                
             logger.info(f"Successfully generated {total_chunks} embeddings. Initiating serial database inserts...")
             
-            # 6. Serial insertion from driver to avoid database indexing performance issues
+            # 7. Serial insertion from driver to avoid database indexing performance issues
             vectors = []
+            all_text_list = []
             for p in raw_points:
+                all_text_list.append(p["chunk_text"])
                 vectors.append({
                     "id": p["id"],
                     "values": p["dense_emb"],
@@ -161,6 +188,10 @@ class RAGIngestionPipeline:
             if vectors:
                 self.pinecone_manager.upsert_vectors(vectors)
                 
+            # Track cost analytics
+            all_text = " ".join(all_text_list)
+            TokenCostTracker.track_ingestion(total_chunks, all_text)
+            
             logger.info(f"Ingestion completed. Indexed {total_chunks} chunks.")
             return total_chunks
             
@@ -172,5 +203,6 @@ if __name__ == "__main__":
     # Test script standalone execution path
     spark_m = SparkSessionManager()
     pinecone_m = PineconeConnectionManager()
-    pipeline = RAGIngestionPipeline(spark_m, pinecone_m)
+    s3_m = S3ConnectionManager()
+    pipeline = RAGIngestionPipeline(spark_m, pinecone_m, s3_m)
     pipeline.run()

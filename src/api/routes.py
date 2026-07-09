@@ -1,6 +1,16 @@
 import time
-from fastapi import APIRouter, Request, HTTPException
-from src.api.schemas import QueryRequest, QueryResponse, IngestResponse, HealthResponse, ChunkDetail
+import io
+import hashlib
+import uuid
+from fastapi import APIRouter, Request, HTTPException, UploadFile, File
+import pypdf
+
+from src.api.schemas import (
+    QueryRequest, QueryResponse, IngestResponse, HealthResponse, ChunkDetail, 
+    S3IngestRequest, AnalyticsResponse, AnalyticsBreakdown
+)
+from src.utils.token_tracker import TokenCostTracker
+from src.utils.chunker import RecursiveCharacterChunker
 from src.utils.logger import setup_logger
 
 logger = setup_logger("api_routes")
@@ -19,7 +29,7 @@ async def health_check():
 @router.post("/ingest", response_model=IngestResponse)
 async def trigger_ingestion(request: Request):
     """
-    Triggers the PySpark ingestion job to clean, chunk, hash, and load documents.
+    Triggers local directory document ingestion using distributed PySpark.
     """
     pipeline = getattr(request.app.state, "ingestion_pipeline", None)
     if not pipeline:
@@ -27,11 +37,126 @@ async def trigger_ingestion(request: Request):
         
     try:
         logger.info("REST Ingest Request received. Launching PySpark job...")
-        total_chunks = pipeline.run()
+        total_chunks = pipeline.run(from_s3=False)
         return IngestResponse(status="success", total_chunks=total_chunks)
     except Exception as e:
         logger.error(f"Ingestion API call failed: {e}")
         raise HTTPException(status_code=500, detail=f"Ingestion failure: {str(e)}")
+
+@router.post("/ingest/s3", response_model=IngestResponse)
+async def trigger_s3_ingestion(request: Request, payload: S3IngestRequest):
+    """
+    Triggers AWS S3 / Lakehouse document ingestion using distributed PySpark.
+    Downloads files from S3 first (or local mock folder fallback) and runs Spark.
+    """
+    pipeline = getattr(request.app.state, "ingestion_pipeline", None)
+    if not pipeline:
+        raise HTTPException(status_code=503, detail="Ingestion service is not initialized.")
+        
+    try:
+        logger.info(f"REST S3 Ingest Request received. Bucket: '{payload.bucket}', Prefix: '{payload.prefix}'")
+        
+        # Override bucket configurations if provided
+        if payload.bucket:
+            pipeline.s3_manager.bucket_name = payload.bucket
+        if payload.prefix:
+            pipeline.s3_manager.prefix = payload.prefix
+            
+        total_chunks = pipeline.run(from_s3=True)
+        return IngestResponse(status="success", total_chunks=total_chunks)
+    except Exception as e:
+        logger.error(f"S3 Ingestion API call failed: {e}")
+        raise HTTPException(status_code=500, detail=f"S3 Ingestion failure: {str(e)}")
+
+@router.post("/upload", response_model=IngestResponse)
+async def upload_file(
+    request: Request,
+    file: UploadFile = File(...)
+):
+    """
+    Direct multi-part file upload route. Receives PDF or TXT files, extracts text,
+    chunks it, embeds it on CPU, and pushes it to Pinecone immediately (bypassing Spark for quick files).
+    """
+    search_engine = getattr(request.app.state, "search_engine", None)
+    pinecone_manager = getattr(request.app.state, "pinecone_manager", None)
+    
+    if not search_engine or not pinecone_manager:
+        raise HTTPException(status_code=503, detail="Search or Pinecone service is not initialized.")
+        
+    try:
+        contents = await file.read()
+        filename = file.filename.lower()
+        
+        logger.info(f"File upload request received. Filename: '{filename}', Size: {len(contents)} bytes")
+        text = ""
+        
+        # 1. Parse content based on file extension
+        if filename.endswith(".pdf"):
+            pdf_file = io.BytesIO(contents)
+            reader = pypdf.PdfReader(pdf_file)
+            text_list = []
+            for idx, page in enumerate(reader.pages):
+                page_text = page.extract_text()
+                if page_text:
+                    text_list.append(page_text)
+            text = " ".join(text_list)
+        else:
+            # Fallback to UTF-8 text decoding
+            text = contents.decode("utf-8", errors="ignore")
+            
+        cleaned_text = " ".join(text.strip().split())
+        if not cleaned_text:
+            raise HTTPException(status_code=400, detail="Uploaded file contains no readable text.")
+            
+        # 2. Document hashing
+        doc_id = hashlib.sha256(cleaned_text.encode("utf-8")).hexdigest()
+        
+        # 3. Chunk text using utility
+        chunker = RecursiveCharacterChunker(chunk_size=500, chunk_overlap=50)
+        chunks = chunker.chunk_text(cleaned_text)
+        
+        if not chunks:
+            return IngestResponse(status="success", total_chunks=0)
+            
+        # 4. Generate embeddings and upsert to Pinecone
+        vectors = []
+        for idx, chunk in enumerate(chunks):
+            dense_emb = search_engine.dense_model.encode(chunk, convert_to_numpy=True).tolist()
+            sparse_vec = search_engine.sparse_encoder.encode(chunk)
+            point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_id}_{idx}"))
+            
+            vectors.append({
+                "id": point_id,
+                "values": dense_emb,
+                "sparse_values": {
+                    "indices": sparse_vec["indices"],
+                    "values": sparse_vec["values"]
+                },
+                "metadata": {
+                    "doc_id": doc_id,
+                    "chunk_text": chunk,
+                    "chunk_index": idx
+                }
+            })
+            
+            if len(vectors) >= 50:
+                pinecone_manager.upsert_vectors(vectors)
+                vectors = []
+                
+        if vectors:
+            pinecone_manager.upsert_vectors(vectors)
+            
+        # Track cost analytics
+        TokenCostTracker.track_ingestion(len(chunks), cleaned_text)
+        
+        logger.info(f"File upload ingestion complete. Indexed {len(chunks)} chunks.")
+        return IngestResponse(status="success", total_chunks=len(chunks))
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"File upload route failed: {e}")
+        raise HTTPException(status_code=500, detail=f"File upload failure: {str(e)}")
 
 @router.post("/query", response_model=QueryResponse)
 async def query_pipeline(request: Request, payload: QueryRequest):
@@ -61,11 +186,14 @@ async def query_pipeline(request: Request, payload: QueryRequest):
                     id=r["id"],
                     doc_id=r["doc_id"],
                     chunk_text=r["chunk_text"],
-                    chunk_index=r["chunk_index"],
+                    chunk_index=int(r["chunk_index"]),
                     score=r["score"],
                     rerank_score=r["rerank_score"]
                 )
             )
+            
+        # Log query metrics in TokenCostTracker
+        TokenCostTracker.track_query(payload.query, search_results["results"], answer)
             
         return QueryResponse(
             query=payload.query,
@@ -76,6 +204,27 @@ async def query_pipeline(request: Request, payload: QueryRequest):
     except Exception as e:
         logger.error(f"Query API call failed: {e}")
         raise HTTPException(status_code=500, detail=f"Query engine failure: {str(e)}")
+
+@router.get("/analytics", response_model=AnalyticsResponse)
+async def get_analytics_snapshot():
+    """
+    Returns the accumulated query costs and token metrics tracker.
+    """
+    data = TokenCostTracker.get_analytics()
+    breakdown = AnalyticsBreakdown(
+        embedding=data["cost_breakdown"]["embedding"],
+        rerank=data["cost_breakdown"]["rerank"],
+        llm_input=data["cost_breakdown"]["llm_input"],
+        llm_output=data["cost_breakdown"]["llm_output"],
+        db_write=data["cost_breakdown"]["db_write"]
+    )
+    return AnalyticsResponse(
+        total_queries=data["total_queries"],
+        total_ingests=data["total_ingests"],
+        total_tokens=data["total_tokens"],
+        total_cost=data["total_cost"],
+        cost_breakdown=breakdown
+    )
 
 def _synthesize_mock_answer(query: str, contexts: list) -> str:
     """
@@ -96,7 +245,7 @@ def _synthesize_mock_answer(query: str, contexts: list) -> str:
         for i, c in enumerate(contexts[:2]):
             base += f"- **Incident Note {i+1}**: {c['chunk_text']}\n"
         return base
-    elif "policy" in query_lower or "sop" in query_lower or "employee" in query_lower:
+    elif "policy" in query_lower or "sop" in query_lower or "employee" in query_lower or "travel" in query_lower:
         base = "### 📋 Corporate Operations Policy Summary\nAccording to the guidelines retrieved from the HR directory:\n\n"
         for i, c in enumerate(contexts[:2]):
             base += f"- **Policy excerpt {i+1}**: {c['chunk_text']}\n"

@@ -87,3 +87,36 @@ def test_query_api_endpoint(test_client):
     assert data["results"][0]["doc_id"] == "test_sha_256_hash"
     assert data["results"][0]["chunk_index"] == 2
     assert data["results"][0]["rerank_score"] == 0.985
+
+
+def test_s3_ingestion_api_endpoint(test_client):
+    payload = {
+        "bucket": "my-mock-bucket",
+        "prefix": "incoming/"
+    }
+    response = test_client.post("/api/v1/ingest/s3", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "success"
+    assert data["total_chunks"] == 150
+
+
+def test_upload_file_api_endpoint(test_client):
+    # Mock pinecone_manager in app state for upload test
+    test_client.app.state.pinecone_manager = test_client.app.state.search_engine.pinecone_manager
+    
+    file_payload = {"file": ("test_doc.txt", b"Mocked text content for direct file upload indexing.")}
+    response = test_client.post("/api/v1/upload", files=file_payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["status"] == "success"
+    assert data["total_chunks"] > 0
+
+
+def test_analytics_api_endpoint(test_client):
+    response = test_client.get("/api/v1/analytics")
+    assert response.status_code == 200
+    data = response.json()
+    assert "total_queries" in data
+    assert "total_cost" in data
+    assert "cost_breakdown" in data

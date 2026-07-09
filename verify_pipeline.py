@@ -18,6 +18,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from data import generate_data
 from src.connections.spark import SparkSessionManager
 from src.connections.pinecone import PineconeConnectionManager
+from src.connections.s3 import S3ConnectionManager
 from src.ingestion.pipeline import RAGIngestionPipeline
 from src.retrieval.search import RAGSearchEngine
 
@@ -32,10 +33,11 @@ def main():
     print("\n2. Initializing OOP Connection Managers...")
     spark_manager = SparkSessionManager()
     pinecone_manager = PineconeConnectionManager()
+    s3_manager = S3ConnectionManager()
     
     # 3. Launch Ingestion
     print("\n3. Launching RAG Ingestion Pipeline...")
-    pipeline = RAGIngestionPipeline(spark_manager, pinecone_manager)
+    pipeline = RAGIngestionPipeline(spark_manager, pinecone_manager, s3_manager)
     total_indexed = pipeline.run()
     print(f"Ingested {total_indexed} chunks successfully.")
     

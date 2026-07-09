@@ -4,6 +4,7 @@ import uvicorn
 
 from src.connections.pinecone import PineconeConnectionManager
 from src.connections.spark import SparkSessionManager
+from src.connections.s3 import S3ConnectionManager
 from src.ingestion.pipeline import RAGIngestionPipeline
 from src.retrieval.search import RAGSearchEngine
 from src.api.routes import router
@@ -22,14 +23,16 @@ async def lifespan(app: FastAPI):
     # 1. Instantiate managers
     spark_manager = SparkSessionManager()
     pinecone_manager = PineconeConnectionManager()
+    s3_manager = S3ConnectionManager()
     
     # 2. Instantiate engines
-    ingestion_pipeline = RAGIngestionPipeline(spark_manager, pinecone_manager)
+    ingestion_pipeline = RAGIngestionPipeline(spark_manager, pinecone_manager, s3_manager)
     search_engine = RAGSearchEngine(pinecone_manager)
     
     # 3. Cache services in app state
     app.state.ingestion_pipeline = ingestion_pipeline
     app.state.search_engine = search_engine
+    app.state.pinecone_manager = pinecone_manager
     
     logger.info("REST API dependencies loaded.")
     yield
