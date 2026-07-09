@@ -14,86 +14,110 @@ import streamlit as st
 
 # Page Configuration
 st.set_page_config(
-    page_title="Document Intelligence Hub",
+    page_title="DocHub - Knowledge & Retrieval Hub",
     page_icon="📂",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom styling representing a modern, premium "Docs & Knowledge Hub"
+# Custom premium styling representing a modern dark-mode Docs & Knowledge Hub
 st.markdown("""
 <style>
-    /* Global Background and Typography */
+    /* Global Base Styling - Modern Developer Dark Mode */
     .stApp {
-        background-color: #fafbfc;
-        color: #1e293b;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+        background-color: #090d16;
+        color: #f3f4f6;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     
-    /* Top Navigation Header */
+    /* Subtle background ambient glow gradients */
+    [data-testid="stAppViewContainer"]::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 20%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, rgba(99, 102, 241, 0) 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    
+    /* Top Navigation Header (DocHub Dark Style) */
     .hub-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 16px 32px;
-        background-color: #ffffff;
-        border-bottom: 1px solid #f1f5f9;
+        background-color: rgba(17, 24, 39, 0.8);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         margin-bottom: 30px;
-        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.25);
     }
     .hub-logo {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
         font-weight: 800;
-        color: #4f46e5;
+        color: #818cf8; /* Light Indigo Glow */
         letter-spacing: -0.5px;
     }
     .hub-status {
-        font-size: 0.8rem;
-        font-weight: 500;
-        color: #64748b;
-        background: #f1f5f9;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #a78bfa; /* Violet accent */
+        background: rgba(167, 139, 250, 0.1);
         padding: 4px 12px;
         border-radius: 9999px;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(167, 139, 250, 0.2);
     }
 
     /* Hero Headline Section */
     .hero-section {
         text-align: center;
         max-width: 750px;
-        margin: 0 auto 35px auto;
+        margin: 15px auto 40px auto;
         padding: 10px;
     }
     .hero-title {
-        font-size: 2.4rem;
+        font-size: 2.5rem;
         font-weight: 800;
-        color: #0f172a;
-        letter-spacing: -1px;
-        line-height: 1.2;
-        margin-bottom: 12px;
+        color: #ffffff;
+        letter-spacing: -1.2px;
+        line-height: 1.25;
+        margin-bottom: 14px;
+        background: linear-gradient(135deg, #ffffff 50%, #818cf8 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
     }
     .hero-subtitle {
         font-size: 1.05rem;
-        color: #64748b;
-        line-height: 1.5;
+        color: #9ca3af;
+        line-height: 1.6;
     }
 
-    /* Cards */
+    /* Premium Glassmorphic Cards */
     .hub-card {
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
+        background-color: rgba(17, 24, 39, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 12px;
         padding: 24px;
         margin-bottom: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        backdrop-filter: blur(8px);
+        box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hub-card:hover {
+        border-color: rgba(99, 102, 241, 0.25);
+        box-shadow: 0 10px 25px 0 rgba(99, 102, 241, 0.05);
     }
     .hub-card-title {
         font-size: 0.95rem;
         font-weight: 700;
-        color: #0f172a;
-        margin-bottom: 14px;
-        border-bottom: 1px solid #f1f5f9;
+        color: #ffffff;
+        margin-bottom: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         padding-bottom: 10px;
+        letter-spacing: 0.5px;
     }
     
     .search-container {
@@ -102,132 +126,156 @@ st.markdown("""
         text-align: center;
     }
 
-    /* Report Memo style */
+    /* Executive Memo Block - Dark Glass Style */
     .report-memo {
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-left: 4px solid #4f46e5;
+        background-color: rgba(30, 41, 59, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-left: 4px solid #6366f1;
         border-radius: 8px;
         padding: 20px 24px;
         margin-bottom: 25px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        backdrop-filter: blur(6px);
+        color: #e5e7eb;
     }
     .report-memo-header {
         font-size: 0.75rem;
         font-weight: 700;
-        color: #475569;
+        color: #9ca3af;
         text-transform: uppercase;
-        letter-spacing: 1px;
+        letter-spacing: 1.5px;
         margin-bottom: 10px;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         padding-bottom: 6px;
     }
     
-    /* Reference Segment Cards */
+    /* Clean Reference Segment Cards */
     .segment-card {
-        background-color: #ffffff;
-        border: 1px solid #e2e8f0;
+        background-color: rgba(17, 24, 39, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 10px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
     }
     .segment-card-header {
         display: flex;
         justify-content: space-between;
         font-size: 0.8rem;
         font-weight: 600;
-        color: #64748b;
-        border-bottom: 1px solid #f1f5f9;
+        color: #9ca3af;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         padding-bottom: 6px;
         margin-bottom: 10px;
     }
     
-    /* Indigo Buttons */
+    /* Premium Indigo Buttons with subtle gradient */
     .stButton > button {
-        background-color: #4f46e5 !important;
+        background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%) !important;
         color: #ffffff !important;
         border: 1px solid #4f46e5 !important;
         border-radius: 6px !important;
         font-size: 0.85rem !important;
         font-weight: 600 !important;
-        padding: 8px 18px !important;
-        transition: background-color 0.15s ease, transform 0.1s ease !important;
+        padding: 8px 20px !important;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2) !important;
+        transition: all 0.2s ease !important;
     }
     .stButton > button:hover {
-        background-color: #4338ca !important;
+        background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%) !important;
         border-color: #4338ca !important;
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35) !important;
         transform: translateY(-0.5px);
     }
     
-    /* Analytic Tiles */
+    /* Analytical Metrics Grid */
     .analytic-tile {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
+        background: rgba(17, 24, 39, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 10px;
-        padding: 16px;
+        padding: 18px;
         text-align: center;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
     .analytic-label {
-        font-size: 0.75rem;
-        color: #64748b;
+        font-size: 0.72rem;
+        color: #9ca3af;
         font-weight: 600;
         text-transform: uppercase;
-        margin-bottom: 4px;
-        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+        letter-spacing: 0.8px;
     }
     .analytic-val {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
         font-weight: 800;
-        color: #0f172a;
+        color: #ffffff;
     }
     .analytic-val-cost {
-        color: #0f766e;
+        color: #2dd4bf; /* Mint/teal for cost */
     }
 
-    /* Monospace Chunks */
+    /* Monospace Chunk Box (Editor look) */
     .monobox {
-        background-color: #fafbfc;
-        border: 1px solid #e2e8f0;
+        background-color: rgba(15, 23, 42, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.05);
         border-radius: 6px;
-        padding: 10px 14px;
+        padding: 12px 16px;
         font-family: Menlo, Monaco, Consolas, monospace;
         font-size: 0.8rem;
-        line-height: 1.4;
-        color: #334155;
+        line-height: 1.45;
+        color: #e2e8f0;
     }
     .tag-overlap {
-        color: #4f46e5;
+        color: #818cf8;
         font-weight: bold;
-        background: #e0e7ff;
-        padding: 1px 4px;
-        border-radius: 3px;
-        margin-right: 4px;
+        background: rgba(99, 102, 241, 0.15);
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-right: 6px;
+        border: 1px solid rgba(99, 102, 241, 0.25);
     }
 
-    /* Diagnostics */
+    /* Diagnostic Lists */
     .diag-item {
-        border-bottom: 1px solid #f1f5f9;
-        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        padding: 10px 0;
         font-size: 0.8rem;
     }
     .diag-item:last-child {
         border-bottom: none;
     }
     .badge-blue {
-        background-color: #e0f2fe;
-        color: #0369a1;
-        padding: 1px 6px;
+        background-color: rgba(14, 165, 233, 0.1);
+        color: #38bdf8;
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        padding: 2px 6px;
         border-radius: 4px;
         font-weight: 600;
     }
     .badge-purple {
-        background-color: #f3e8ff;
-        color: #6b21a8;
-        padding: 1px 6px;
+        background-color: rgba(167, 139, 250, 0.1);
+        color: #c084fc;
+        border: 1px solid rgba(167, 139, 250, 0.2);
+        padding: 2px 6px;
         border-radius: 4px;
         font-weight: 600;
+    }
+
+    /* Form and Sidebar Overrides */
+    .stTextInput input {
+        background-color: rgba(17, 24, 39, 0.8) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .stTextInput input:focus {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 1px #6366f1 !important;
+    }
+    .stTextArea textarea {
+        background-color: rgba(17, 24, 39, 0.8) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .stSidebar {
+        background-color: #07090e !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.04) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -299,7 +347,7 @@ if not st.session_state.connected:
     except Exception:
         pass
 
-# Sidebar Settings
+# Sidebar Config
 with st.sidebar:
     st.markdown("### Settings")
     st.session_state.backend_url = st.text_input("Endpoint Gateway", value=st.session_state.backend_url)
@@ -325,7 +373,7 @@ with st.sidebar:
     
     if st.button("🚀 Ingest from Lakehouse"):
         # Local Fallback execution if REST server is down
-        if not st.connected and not st.session_state.connected:
+        if not st.session_state.connected:
             with st.spinner("Syncing AWS S3 and running ingestion locally..."):
                 try:
                     from src.connections.spark import SparkSessionManager
@@ -474,7 +522,7 @@ with tabs[0]:
         # Batch seeding card
         st.markdown('<div class="hub-card">', unsafe_allow_html=True)
         st.markdown('<div class="hub-card-title">PySpark Batch ETL</div>', unsafe_allow_html=True)
-        st.markdown("<p style='font-size:0.8rem; color:#64748b; margin-top:0;'>Run distributed Spark cleanup and embedding nodes to seed the vector database.</p>", unsafe_allow_html=True)
+        st.markdown("<p style='font-size:0.8rem; color:#9ca3af; margin-top:0;'>Run distributed Spark cleanup and embedding nodes to seed the vector database.</p>", unsafe_allow_html=True)
         if st.button("Run Spark Seeding Pipeline"):
             if not st.session_state.connected:
                 with st.spinner("Seeding pipeline locally (Local Fallback)..."):
@@ -581,7 +629,7 @@ with tabs[0]:
             for idx, item in enumerate(active["results"]):
                 with st.expander(f"Reference Segment {idx+1} (Doc: {item['doc_id'][:12]}... • Index: {item['chunk_index']})"):
                     st.markdown(f"""
-                    <div style="font-size: 0.85rem; color: #334155; line-height: 1.5; background: #fafafa; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px;">
+                    <div style="font-size: 0.85rem; color: #e2e8f0; line-height: 1.5; background: rgba(15, 23, 42, 0.4); padding: 12px; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 4px;">
                         "{item['chunk_text']}"
                     </div>
                     """, unsafe_allow_html=True)
@@ -652,13 +700,13 @@ with tabs[1]:
                 st.markdown(f"""
                 <div class="monobox">
                     <span class="tag-overlap">Overlap:</span>{overlap_prefix}
-                    <span style="color: #64748b;">{body_text}</span>
+                    <span style="color: #9ca3af;">{body_text}</span>
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
                 <div class="monobox" style="border-left: 3px solid #4f46e5;">
-                    <span style="color: #64748b;">{body_text}</span>
+                    <span style="color: #9ca3af;">{body_text}</span>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -706,7 +754,7 @@ with tabs[2]:
                         <span>Match {idx+1} | Segment: {item['chunk_index']}</span>
                         <span class="badge-blue">DB: {item['score']:.4f}</span>
                     </div>
-                    <div style="color: #64748b;">{item['chunk_text'][:120]}...</div>
+                    <div style="color: #9ca3af;">{item['chunk_text'][:120]}...</div>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -719,7 +767,7 @@ with tabs[2]:
                         <span>Rank {idx+1} | Segment: {item['chunk_index']}</span>
                         <span class="badge-purple">Rerank: {item['rerank_score']:.4f}</span>
                     </div>
-                    <div style="color: #1e293b;">{item['chunk_text'][:120]}...</div>
+                    <div style="color: #e5e7eb;">{item['chunk_text'][:120]}...</div>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -745,9 +793,9 @@ with tabs[3]:
             with col2:
                 st.markdown(f'<div class="analytic-tile"><div class="analytic-label">Tokens</div><div class="analytic-val">{an_data["total_tokens"]:,}</div></div>', unsafe_allow_html=True)
             with col3:
-                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">Queries</div><div class="analytic-val" style="color:#4f46e5;">{an_data["total_queries"]}</div></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">Queries</div><div class="analytic-val" style="color:#818cf8;">{an_data["total_queries"]}</div></div>', unsafe_allow_html=True)
             with col4:
-                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">ETLs</div><div class="analytic-val" style="color:#0f766e;">{an_data["total_ingests"]}</div></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">ETLs</div><div class="analytic-val" style="color:#2dd4bf;">{an_data["total_ingests"]}</div></div>', unsafe_allow_html=True)
                 
             st.markdown("### Resource Billing Breakdown")
             breakdown = an_data["cost_breakdown"]
@@ -758,7 +806,7 @@ with tabs[3]:
             chart = alt.Chart(df_chart).mark_bar(size=26, cornerRadiusTopLeft=4, cornerRadiusTopRight=4).encode(
                 x=alt.X("Component:N", sort=None),
                 y=alt.Y("Cost ($):Q"),
-                color=alt.value("#4f46e5"),
+                color=alt.value("#6366f1"),
                 tooltip=["Component", "Cost ($)"]
             ).properties(height=290)
             st.altair_chart(chart, use_container_width=True)
@@ -791,14 +839,14 @@ with tabs[3]:
                     st.markdown(f"""
                     <div class="analytic-tile">
                         <div class="analytic-label">Queries Run</div>
-                        <div class="analytic-val" style="color: #4f46e5;">{an_data['total_queries']}</div>
+                        <div class="analytic-val" style="color: #818cf8;">{an_data['total_queries']}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with col4:
                     st.markdown(f"""
                     <div class="analytic-tile">
                         <div class="analytic-label">Pipelines Executed</div>
-                        <div class="analytic-val" style="color: #0f766e;">{an_data['total_ingests']}</div>
+                        <div class="analytic-val" style="color: #2dd4bf;">{an_data['total_ingests']}</div>
                     </div>
                     """, unsafe_allow_html=True)
                     
@@ -824,7 +872,7 @@ with tabs[3]:
                 ).encode(
                     x=alt.X("Component:N", sort=None, title="ETL / Query Service Layer"),
                     y=alt.Y("Cost ($):Q", title="Cost (USD)"),
-                    color=alt.value("#4f46e5"),  # Indigo
+                    color=alt.value("#6366f1"),  # Indigo
                     tooltip=["Component", "Cost ($)"]
                 ).properties(
                     height=290
