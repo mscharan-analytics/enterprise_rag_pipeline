@@ -39,6 +39,9 @@ async def trigger_ingestion(request: Request):
         logger.info("REST Ingest Request received. Launching PySpark job...")
         total_chunks = pipeline.run(from_s3=False)
         return IngestResponse(status="success", total_chunks=total_chunks)
+    except ValueError as ve:
+        logger.error(f"Ingestion validation failed: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logger.error(f"Ingestion API call failed: {e}")
         raise HTTPException(status_code=500, detail=f"Ingestion failure: {str(e)}")
@@ -64,6 +67,9 @@ async def trigger_s3_ingestion(request: Request, payload: S3IngestRequest):
             
         total_chunks = pipeline.run(from_s3=True)
         return IngestResponse(status="success", total_chunks=total_chunks)
+    except ValueError as ve:
+        logger.error(f"S3 Ingestion validation failed: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logger.error(f"S3 Ingestion API call failed: {e}")
         raise HTTPException(status_code=500, detail=f"S3 Ingestion failure: {str(e)}")
@@ -154,6 +160,9 @@ async def upload_file(
         
     except HTTPException:
         raise
+    except ValueError as ve:
+        logger.error(f"File upload validation failed: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logger.error(f"File upload route failed: {e}")
         raise HTTPException(status_code=500, detail=f"File upload failure: {str(e)}")
@@ -201,6 +210,9 @@ async def query_pipeline(request: Request, payload: QueryRequest):
             metrics=search_results["metrics"],
             results=response_chunks
         )
+    except ValueError as ve:
+        logger.error(f"Query validation failed: {ve}")
+        raise HTTPException(status_code=400, detail=str(ve))
     except Exception as e:
         logger.error(f"Query API call failed: {e}")
         raise HTTPException(status_code=500, detail=f"Query engine failure: {str(e)}")

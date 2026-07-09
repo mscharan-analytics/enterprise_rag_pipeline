@@ -25,7 +25,14 @@ from src.retrieval.search import RAGSearchEngine
 def main():
     print("=== [RAG OOP Pipeline Verification Start] ===")
     
-    # 1. Generate Dataset
+    # Check if Pinecone environment credentials are set
+    if not os.getenv("PINECONE_API_KEY"):
+        print("[WARNING] PINECONE_API_KEY environment variable not set.")
+        print("Skipping E2E Integration verification script to avoid failing headless CI build without secrets.")
+        print("=== [RAG OOP Pipeline Verification Skipped] ===")
+        return
+        
+    # 1. Triggering data generation
     print("\n1. Triggering data generation...")
     generate_data.main()
     

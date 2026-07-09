@@ -29,6 +29,12 @@ class PineconeConnectionManager:
         if self._pc is not None:
             return self._pc
             
+        if not self.api_key:
+            raise ValueError(
+                "Pinecone API Key is not configured. "
+                "Please configure the PINECONE_API_KEY environment variable in your server or secrets settings."
+            )
+            
         logger.info("Initializing Pinecone client...")
         self._pc = Pinecone(api_key=self.api_key)
         return self._pc

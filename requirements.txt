@@ -15,5 +15,6 @@ httpx>=0.24.0
 boto3
 pypdf
 python-multipart
+packaging==24.2
 
 
