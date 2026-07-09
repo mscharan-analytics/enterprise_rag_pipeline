@@ -4,6 +4,10 @@ import time
 import socket
 import subprocess
 import requests
+import hashlib
+import uuid
+import pypdf
+import io
 import pandas as pd
 import altair as alt
 import streamlit as st
@@ -16,7 +20,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Shared Styling (Indigo theme, clean typography)
+# Custom styling representing a modern, premium "Docs & Knowledge Hub"
 st.markdown("""
 <style>
     /* Global Background and Typography */
@@ -228,13 +232,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Programmatically launch FastAPI service on port 8000 if not running
+# Programmatically launch FastAPI service on port 8000 if not running (Local background helper)
 @st.cache_resource
 def launch_background_api():
-    """
-    Check if FastAPI server is already running on port 8000.
-    If not, launch it programmatically in a separate subprocess.
-    """
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     port_in_use = False
     try:
@@ -245,13 +245,30 @@ def launch_background_api():
         s.close()
         
     if not port_in_use:
-        # Launch using the current python interpreter running streamlit
-        subprocess.Popen([sys.executable, "-m", "uvicorn", "src.api.main:app", "--host", "127.0.0.1", "--port", "8000"])
-        # Wait a moment for application startup
-        time.sleep(3)
+        try:
+            subprocess.Popen([sys.executable, "-m", "uvicorn", "src.api.main:app", "--host", "127.0.0.1", "--port", "8000"])
+            time.sleep(2)
+        except Exception:
+            pass
 
-# Initialize background API
 launch_background_api()
+
+# Load Core RAG Engines in-process to guarantee offline / fallback execution
+@st.cache_resource
+def get_local_engines():
+    """
+    Instantiates the RAG search, ingestion and connection engines directly inside the Streamlit
+    process thread. This acts as a robust fallback if the REST Gateway is offline or blocked.
+    """
+    from src.connections.pinecone import PineconeConnectionManager
+    from src.connections.s3 import S3ConnectionManager
+    from src.retrieval.search import RAGSearchEngine
+    
+    pinecone_m = PineconeConnectionManager()
+    s3_m = S3ConnectionManager()
+    search_e = RAGSearchEngine(pinecone_m)
+    
+    return pinecone_m, s3_m, search_e
 
 # 1. Premium Header Navigation
 st.markdown("""
@@ -273,16 +290,16 @@ if "last_response" not in st.session_state:
 if "results_list" not in st.session_state:
     st.session_state.results_list = []
 
-# Verify localhost connection automatically on first load
+# Verify REST API localhost connection automatically
 if not st.session_state.connected:
     try:
-        res = requests.get(f"{st.session_state.backend_url}/health", timeout=3)
+        res = requests.get(f"{st.session_state.backend_url}/health", timeout=2)
         if res.status_code == 200 and res.json().get("status") == "healthy":
             st.session_state.connected = True
     except Exception:
         pass
 
-# Sidebar Config
+# Sidebar Settings
 with st.sidebar:
     st.markdown("### Settings")
     st.session_state.backend_url = st.text_input("Endpoint Gateway", value=st.session_state.backend_url)
@@ -307,8 +324,24 @@ with st.sidebar:
     s3_prefix = st.text_input("S3 Directory Prefix", value="documents/")
     
     if st.button("🚀 Ingest from Lakehouse"):
-        if not st.session_state.connected:
-            st.warning("Connect to the API gateway first.")
+        # Local Fallback execution if REST server is down
+        if not st.connected and not st.session_state.connected:
+            with st.spinner("Syncing AWS S3 and running ingestion locally..."):
+                try:
+                    from src.connections.spark import SparkSessionManager
+                    from src.ingestion.pipeline import RAGIngestionPipeline
+                    
+                    pinecone_m, s3_m, search_e = get_local_engines()
+                    s3_m.bucket_name = s3_bucket
+                    s3_m.prefix = s3_prefix
+                    
+                    spark_m = SparkSessionManager()
+                    pipeline = RAGIngestionPipeline(spark_m, pinecone_m, s3_m)
+                    
+                    total = pipeline.run(from_s3=True)
+                    st.success(f"ETL completed: Ingested {total} segments directly.")
+                except Exception as ex:
+                    st.error(f"ETL failure: {ex}")
         else:
             with st.spinner("Synchronizing bucket and executing PySpark ingestion..."):
                 try:
@@ -352,10 +385,74 @@ with tabs[0]:
         uploaded_file = st.file_uploader("Upload local PDF or TXT file", type=["pdf", "txt"], label_visibility="collapsed")
         if uploaded_file is not None:
             if st.button("Process Document"):
+                # Check for REST connection. If offline, use native fallback in-process execution!
                 if not st.session_state.connected:
-                    st.warning("Establish Gateway connection in the sidebar settings first.")
+                    with st.spinner("Processing locally (Local Fallback)..."):
+                        try:
+                            # 1. Parse text from uploaded file
+                            contents = uploaded_file.getvalue()
+                            filename = uploaded_file.name.lower()
+                            text = ""
+                            
+                            if filename.endswith(".pdf"):
+                                pdf_file = io.BytesIO(contents)
+                                reader = pypdf.PdfReader(pdf_file)
+                                text_list = []
+                                for page in reader.pages:
+                                    p_txt = page.extract_text()
+                                    if p_txt:
+                                        text_list.append(p_txt)
+                                text = " ".join(text_list)
+                            else:
+                                text = contents.decode("utf-8", errors="ignore")
+                                
+                            cleaned_text = " ".join(text.strip().split())
+                            if not cleaned_text:
+                                st.error("Uploaded file contains no readable text.")
+                            else:
+                                # 2. Generate chunks
+                                from src.utils.chunker import RecursiveCharacterChunker
+                                from src.utils.token_tracker import TokenCostTracker
+                                
+                                pinecone_m, s3_m, search_e = get_local_engines()
+                                
+                                doc_id = hashlib.sha256(cleaned_text.encode("utf-8")).hexdigest()
+                                chunker = RecursiveCharacterChunker(chunk_size=500, chunk_overlap=50)
+                                chunks = chunker.chunk_text(cleaned_text)
+                                
+                                # 3. Generate embeddings and upload to Pinecone
+                                vectors = []
+                                for idx, chunk in enumerate(chunks):
+                                    dense_emb = search_e.dense_model.encode(chunk, convert_to_numpy=True).tolist()
+                                    sparse_vec = search_e.sparse_encoder.encode(chunk)
+                                    point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_id}_{idx}"))
+                                    
+                                    vectors.append({
+                                        "id": point_id,
+                                        "values": dense_emb,
+                                        "sparse_values": {
+                                            "indices": sparse_vec["indices"],
+                                            "values": sparse_vec["values"]
+                                        },
+                                        "metadata": {
+                                            "doc_id": doc_id,
+                                            "chunk_text": chunk,
+                                            "chunk_index": idx
+                                        }
+                                    })
+                                    if len(vectors) >= 50:
+                                        pinecone_m.upsert_vectors(vectors)
+                                        vectors = []
+                                if vectors:
+                                    pinecone_m.upsert_vectors(vectors)
+                                    
+                                # Track local cost metrics
+                                TokenCostTracker.track_ingestion(len(chunks), cleaned_text)
+                                st.success(f"Indexed document successfully into {len(chunks)} chunks.")
+                        except Exception as ex:
+                            st.error(f"In-process processing failure: {ex}")
                 else:
-                    with st.spinner("Extracting and loading document..."):
+                    with st.spinner("Uploading and indexing document..."):
                         try:
                             files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
                             res = requests.post(f"{st.session_state.backend_url}/upload", files=files, timeout=60)
@@ -374,7 +471,19 @@ with tabs[0]:
         st.markdown("<p style='font-size:0.8rem; color:#64748b; margin-top:0;'>Run distributed Spark cleanup and embedding nodes to seed the vector database.</p>", unsafe_allow_html=True)
         if st.button("Run Spark Seeding Pipeline"):
             if not st.session_state.connected:
-                st.warning("Establish Gateway connection first.")
+                with st.spinner("Seeding pipeline locally (Local Fallback)..."):
+                    try:
+                        from src.connections.spark import SparkSessionManager
+                        from src.ingestion.pipeline import RAGIngestionPipeline
+                        
+                        pinecone_m, s3_m, search_e = get_local_engines()
+                        spark_m = SparkSessionManager()
+                        
+                        pipeline = RAGIngestionPipeline(spark_m, pinecone_m, s3_m)
+                        total = pipeline.run()
+                        st.success(f"Spark seeding ETL completed: Created {total} segments.")
+                    except Exception as ex:
+                        st.error(f"In-process ETL failure: {ex}")
             else:
                 with st.spinner("Executing PySpark ETL job..."):
                     try:
@@ -402,7 +511,31 @@ with tabs[0]:
         
         if query:
             if not st.session_state.connected:
-                st.warning("API Gateway offline. Verify connection in the sidebar.")
+                # Local In-Process search fallback!
+                with st.spinner("Searching locally (Local Fallback)..."):
+                    try:
+                        from src.utils.token_tracker import TokenCostTracker
+                        from src.api.routes import _synthesize_mock_answer
+                        
+                        pinecone_m, s3_m, search_e = get_local_engines()
+                        
+                        # Stage 1 Retrieval + Stage 2 Reranking in-process
+                        results = search_e.search(query, top_k_hybrid=30, top_k_rerank=5)
+                        answer = _synthesize_mock_answer(query, results["results"])
+                        
+                        st.session_state.last_query = query
+                        st.session_state.last_response = results
+                        
+                        st.session_state.results_list = [{
+                            "query": query,
+                            "answer": answer,
+                            "results": results["results"]
+                        }]
+                        
+                        # Track local costs
+                        TokenCostTracker.track_query(query, results["results"], answer)
+                    except Exception as ex:
+                        st.error(f"Local query error: {ex}")
             else:
                 with st.spinner("Querying indexes..."):
                     try:
@@ -422,11 +555,11 @@ with tabs[0]:
                                 "results": res_data["results"]
                             }]
                         else:
-                            st.error("Error executing query against gateway.")
+                            st.error(f"Error executing query: {response.json().get('detail')}")
                     except Exception as e:
                         st.error(f"Network error: {e}")
                         
-        # Displays the Query output as a clean executive memorandum
+        # Displays the Query output
         if st.session_state.results_list:
             active = st.session_state.results_list[0]
             
@@ -437,7 +570,7 @@ with tabs[0]:
             </div>
             """, unsafe_allow_html=True)
             
-            # Displays retrieved source documents cleanly without cluttering the screen
+            # Displays retrieved source documents cleanly
             st.markdown("#### Matched Reference Documents")
             for idx, item in enumerate(active["results"]):
                 with st.expander(f"Reference Segment {idx+1} (Doc: {item['doc_id'][:12]}... • Index: {item['chunk_index']})"):
@@ -588,8 +721,38 @@ with tabs[3]:
     st.markdown('<div class="hub-card">', unsafe_allow_html=True)
     st.markdown('<div class="hub-card-title">Token Billing & Operational Analytics</div>', unsafe_allow_html=True)
     
+    # Retrieve local cost stats directly if REST server is offline
     if not st.session_state.connected:
-        st.warning("Gateway connection offline. Establish connection settings in the sidebar.")
+        try:
+            from src.utils.token_tracker import TokenCostTracker
+            an_data = TokenCostTracker.get_analytics()
+            
+            # Display metrics
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">Cost</div><div class="analytic-val analytic-val-cost">${an_data["total_cost"]:.6f}</div></div>', unsafe_allow_html=True)
+            with col2:
+                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">Tokens</div><div class="analytic-val">{an_data["total_tokens"]:,}</div></div>', unsafe_allow_html=True)
+            with col3:
+                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">Queries</div><div class="analytic-val" style="color:#4f46e5;">{an_data["total_queries"]}</div></div>', unsafe_allow_html=True)
+            with col4:
+                st.markdown(f'<div class="analytic-tile"><div class="analytic-label">ETLs</div><div class="analytic-val" style="color:#0f766e;">{an_data["total_ingests"]}</div></div>', unsafe_allow_html=True)
+                
+            st.markdown("### Resource Billing Breakdown")
+            breakdown = an_data["cost_breakdown"]
+            df_chart = pd.DataFrame({
+                "Component": ["Embeddings", "Reranker", "LLM Prompt", "LLM Generation", "Pinecone Writes"],
+                "Cost ($)": [breakdown["embedding"], breakdown["rerank"], breakdown["llm_input"], breakdown["llm_output"], breakdown["db_write"]]
+            })
+            chart = alt.Chart(df_chart).mark_bar(size=26, cornerRadiusTopLeft=4, cornerRadiusTopRight=4).encode(
+                x=alt.X("Component:N", sort=None),
+                y=alt.Y("Cost ($):Q"),
+                color=alt.value("#4f46e5"),
+                tooltip=["Component", "Cost ($)"]
+            ).properties(height=290)
+            st.altair_chart(chart, use_container_width=True)
+        except Exception as e:
+            st.error(f"Error fetching stats: {e}")
     else:
         try:
             res_an = requests.get(f"{st.session_state.backend_url}/analytics", timeout=5)
