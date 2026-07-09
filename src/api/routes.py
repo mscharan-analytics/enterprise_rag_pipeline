@@ -1,9 +1,14 @@
+import os
 import time
 import io
 import hashlib
 import uuid
 from fastapi import APIRouter, Request, HTTPException, UploadFile, File
 import pypdf
+
+# Import LLM clients
+from openai import OpenAI
+from groq import Groq
 
 from src.api.schemas import (
     QueryRequest, QueryResponse, IngestResponse, HealthResponse, ChunkDetail, 
@@ -170,7 +175,7 @@ async def upload_file(
 @router.post("/query", response_model=QueryResponse)
 async def query_pipeline(request: Request, payload: QueryRequest):
     """
-    Receives query, retrieves relevant chunks, reranks them, and synthesizes an answer.
+    Receives query, retrieves relevant chunks, reranks them, and synthesizes an answer using an LLM.
     """
     search_engine = getattr(request.app.state, "search_engine", None)
     if not search_engine:
@@ -184,8 +189,8 @@ async def query_pipeline(request: Request, payload: QueryRequest):
             top_k_rerank=payload.top_k_rerank
         )
         
-        # Smart synthesized answer mock generator (mimicking the LLM response builder)
-        answer = _synthesize_mock_answer(payload.query, search_results["results"])
+        # Real E2E LLM Generator synthesis (with mock fallback)
+        answer = _generate_llm_answer(payload.query, search_results["results"])
         
         # Convert response chunks to schema models
         response_chunks = []
@@ -238,22 +243,77 @@ async def get_analytics_snapshot():
         cost_breakdown=breakdown
     )
 
+def _generate_llm_answer(query: str, contexts: list) -> str:
+    """
+    Synthesizes response by calling Groq or OpenAI APIs if key is set in environment,
+    otherwise falls back to structured template synthesis.
+    """
+    if not contexts:
+        return "I apologize, but no relevant document chunks were found in the database."
+
+    # Format the prompt context
+    context_text = "\n\n".join([f"Document Segment {i+1}:\n{c['chunk_text']}" for i, c in enumerate(contexts)])
+    
+    system_prompt = (
+        "You are an enterprise document intelligence assistant. Synthesize a concise, "
+        "accurate answer based ONLY on the provided document segments. Cite document sources if applicable."
+    )
+    user_prompt = f"Context segments:\n{context_text}\n\nQuery: {query}"
+    
+    # 1. Attempt Groq API connection (free fast LLM tier)
+    if os.getenv("GROQ_API_KEY"):
+        try:
+            logger.info("Calling Groq API for synthesis...")
+            client = Groq()
+            chat_completion = client.chat.completions.create(
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                model="llama3-8b-8192",
+                temperature=0.2,
+                max_tokens=500
+            )
+            return chat_completion.choices[0].message.content
+        except Exception as e:
+            logger.warning(f"Groq API call failed: {e}. Falling back...")
+            
+    # 2. Attempt OpenAI connection
+    if os.getenv("OPENAI_API_KEY"):
+        try:
+            logger.info("Calling OpenAI API for synthesis...")
+            client = OpenAI()
+            completion = client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": user_prompt}
+                ],
+                temperature=0.2,
+                max_tokens=500
+            )
+            return completion.choices[0].message.content
+        except Exception as e:
+            logger.warning(f"OpenAI API call failed: {e}. Falling back...")
+
+    # 3. Static fallback if no LLM key is configured
+    logger.info("No LLM keys found in environment. Generating template-based mock answer.")
+    return _synthesize_mock_answer(query, contexts)
+
+
 def _synthesize_mock_answer(query: str, contexts: list) -> str:
     """
     Synthesizes answer summary based on query content and matched chunks.
     """
-    if not contexts:
-        return "I apologize, but no relevant document chunks were found in the database."
-        
     query_lower = query.lower()
     
     if "clinical" in query_lower or "patient" in query_lower or "medical" in query_lower:
-        base = "### 🩺 Synthesized Clinical Summary\nBased on patient records matching the inquiry, we noted:\n\n"
+        base = "### 🩺 Clinical Analysis Summary\nBased on patient records matching the inquiry, we noted:\n\n"
         for i, c in enumerate(contexts[:2]):
             base += f"- **Patient Context {i+1}**: {c['chunk_text']}\n"
         return base
     elif "ticket" in query_lower or "error" in query_lower or "fail" in query_lower or "service" in query_lower:
-        base = "### 💻 Infrastructure Incident Report\nAn analysis of the server logs indicates the following events occurred:\n\n"
+        base = "### 💻 System Incident Report\nAn analysis of the server logs indicates the following events occurred:\n\n"
         for i, c in enumerate(contexts[:2]):
             base += f"- **Incident Note {i+1}**: {c['chunk_text']}\n"
         return base
@@ -263,7 +323,7 @@ def _synthesize_mock_answer(query: str, contexts: list) -> str:
             base += f"- **Policy excerpt {i+1}**: {c['chunk_text']}\n"
         return base
     else:
-        base = "### 🔍 Synthesized Context\nThe search matched multiple corporate documents. Summarizing relevant entries:\n\n"
+        base = "### 🔍 Synthesized Context Summary\nThe search matched multiple corporate documents. Summarizing relevant entries:\n\n"
         for i, c in enumerate(contexts[:3]):
             base += f"- **Entry {i+1}** (Doc ID: `{c['doc_id'][:12]}...`): {c['chunk_text']}\n"
         return base

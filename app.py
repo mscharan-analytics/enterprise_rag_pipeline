@@ -515,13 +515,13 @@ with tabs[0]:
                 with st.spinner("Searching locally (Local Fallback)..."):
                     try:
                         from src.utils.token_tracker import TokenCostTracker
-                        from src.api.routes import _synthesize_mock_answer
+                        from src.api.routes import _generate_llm_answer
                         
                         pinecone_m, s3_m, search_e = get_local_engines()
                         
                         # Stage 1 Retrieval + Stage 2 Reranking in-process
                         results = search_e.search(query, top_k_hybrid=30, top_k_rerank=5)
-                        answer = _synthesize_mock_answer(query, results["results"])
+                        answer = _generate_llm_answer(query, results["results"])
                         
                         st.session_state.last_query = query
                         st.session_state.last_response = results
