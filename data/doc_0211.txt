@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-17T07:12:11Z
-EVENT ID: SEC-5211
-Severity: WARNING
-Payload:
-  IP Source: 192.168.26.179
-  Request Method: GET /api/v1/users/profile
-  Response Code: 404
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Germany.

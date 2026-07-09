@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 0cb75216 - DATE: 2026-04-10
-Patient Charlie Brown, age 45, presented with elevated blood pressure.
-Diagnosis: contact dermatitis. Treatment: Prescribed Vitamin D supplements at twice weekly sessions.
-Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 10 weeks.  
-Confidential Medical Record - For Internal Use Only.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-21T04:20:05Z
-EVENT ID: SEC-5595
-Severity: WARNING
-Payload:
-  IP Source: 192.168.250.214
-  Request Method: PATCH /api/v1/users/profile
-  Response Code: 401
-  Action Taken: RATE-LIMITED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: China.

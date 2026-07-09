@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 27dc804c - DATE: 2026-05-17
-Patient Bob Jones, age 33, presented with sudden skin rash.
-Diagnosis: suspected viral infection. Treatment: Prescribed Acetaminophen at 2000 IU daily.
-Notes:   The patient reports a history of diabetes mellitus.   Follow up scheduled in 3 weeks.  
-Confidential Medical Record - For Internal Use Only.

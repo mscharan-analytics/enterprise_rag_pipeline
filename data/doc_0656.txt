@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 5c999440 - DATE: 2026-03-14
-Patient Alice Smith, age 44, presented with acute lower back pain.
-Diagnosis: contact dermatitis. Treatment: Prescribed Acetaminophen at 500mg as needed.
-Notes:   The patient reports a history of no significant history.   Follow up scheduled in 4 weeks.  
-Confidential Medical Record - For Internal Use Only.

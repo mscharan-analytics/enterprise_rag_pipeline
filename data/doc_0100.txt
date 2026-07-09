@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: d2561f3b - DATE: 2026-04-14
-Patient Bob Jones, age 37, presented with acute lower back pain.
-Diagnosis: essential hypertension. Treatment: Prescribed Vitamin D supplements at 10mg once daily.
-Notes:   The patient reports a history of diabetes mellitus.   Follow up scheduled in 1 weeks.  
-Confidential Medical Record - For Internal Use Only.

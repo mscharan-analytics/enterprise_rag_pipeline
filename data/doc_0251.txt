@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-03-16T20:21:29Z
-EVENT ID: SEC-5251
-Severity: INFO
-Payload:
-  IP Source: 192.168.200.232
-  Request Method: GET /api/v1/users/profile
-  Response Code: 200
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: United States.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-04-21T14:35:25Z
-EVENT ID: SEC-5147
-Severity: WARNING
-Payload:
-  IP Source: 192.168.105.183
-  Request Method: GET /api/v2/payment/charge
-  Response Code: 403
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

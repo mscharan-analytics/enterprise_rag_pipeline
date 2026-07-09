@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-06-28T15:43:16Z
-EVENT ID: SEC-5103
-Severity: ALERT
-Payload:
-  IP Source: 192.168.4.248
-  Request Method: DELETE /static/images/hero.jpg
-  Response Code: 404
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: India.

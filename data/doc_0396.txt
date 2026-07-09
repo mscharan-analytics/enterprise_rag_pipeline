@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 9462cb4d - DATE: 2026-07-25
-Patient Bob Jones, age 36, presented with sudden skin rash.
-Diagnosis: essential hypertension. Treatment: Prescribed Ibuprofen at 2000 IU daily.
-Notes:   The patient reports a history of no significant history.   Follow up scheduled in 9 weeks.  
-Confidential Medical Record - For Internal Use Only.

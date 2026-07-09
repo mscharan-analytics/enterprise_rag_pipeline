@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-01-27T08:11:41Z
-EVENT ID: SEC-5799
-Severity: WARNING
-Payload:
-  IP Source: 192.168.89.194
-  Request Method: GET /admin/database/truncate
-  Response Code: 200
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Brazil.

@@ -19,37 +19,45 @@ os.environ["USE_EMBEDDED_QDRANT"] = "True"
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from data import generate_data
-from src.ingestion import pipeline
+from src.connections.spark import SparkSessionManager
+from src.connections.qdrant import QdrantConnectionManager
+from src.ingestion.pipeline import RAGIngestionPipeline
 from src.retrieval.search import RAGSearchEngine
 
 def main():
-    print("=== [RAG Pipeline Verification Start] ===")
+    print("=== [RAG OOP Pipeline Verification Start] ===")
     
     # 1. Generate Dataset
     print("\n1. Triggering data generation...")
     generate_data.main()
     
-    # 2. Run Spark Ingestion
-    print("\n2. Launching PySpark ingestion pipeline in local embedded mode...")
-    pipeline.run_pipeline()
+    # 2. Instantiate managers
+    print("\n2. Initializing OOP Connection Managers...")
+    spark_manager = SparkSessionManager()
+    qdrant_manager = QdrantConnectionManager()
     
-    # 3. Connect Search Engine
-    print("\n3. Connecting RAG Search Engine (loading SentenceTransformer & Cross-Encoder)...")
-    engine = RAGSearchEngine()
+    # 3. Launch Ingestion
+    print("\n3. Launching RAG Ingestion Pipeline...")
+    pipeline = RAGIngestionPipeline(spark_manager, qdrant_manager)
+    total_indexed = pipeline.run()
+    print(f"Ingested {total_indexed} chunks successfully.")
     
-    # 4. Run Test Queries
+    # 4. Instantiate Search
+    print("\n4. Initializing RAG Search Engine...")
+    engine = RAGSearchEngine(qdrant_manager)
+    
+    # 5. Run Test Queries
     queries = [
         "Find a clinical log mentioning patient symptoms or diagnosis of contact dermatitis",
         "Which support tickets report a database connection timeout or memory leak?",
         "What is the standard operating procedure travel expense guideline?"
     ]
     
-    print("\n4. Running test search queries...")
+    print("\n5. Running test search queries...")
     for i, query in enumerate(queries, 1):
         print(f"\n--- Test Query {i}: '{query}' ---")
         results = engine.search(query, top_k_hybrid=15, top_k_rerank=2)
         
-        # Output Metrics
         print(f"Latency Performance Metrics:")
         for k, v in results["metrics"].items():
             print(f"  - {k}: {v:.2f} ms")
@@ -59,7 +67,7 @@ def main():
             print(f"  [{rank}] Doc: {res['doc_id'][:12]}... (Chunk {res['chunk_index']}) | Rerank Score: {res['rerank_score']:.4f}")
             print(f"      Text: {res['chunk_text'][:150]}...")
             
-    print("\n=== [RAG Pipeline Verification Complete] ===")
+    print("\n=== [RAG OOP Pipeline Verification Complete] ===")
 
 if __name__ == "__main__":
     main()

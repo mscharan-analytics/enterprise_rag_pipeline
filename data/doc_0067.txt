@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-04-21T08:56:32Z
-EVENT ID: SEC-5067
-Severity: WARNING
-Payload:
-  IP Source: 192.168.252.179
-  Request Method: GET /admin/database/truncate
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: India.

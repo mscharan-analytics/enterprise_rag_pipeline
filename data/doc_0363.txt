@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-03-15T08:39:35Z
-EVENT ID: SEC-5363
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.28.112
-  Request Method: POST /api/v1/users/profile
-  Response Code: 404
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Russia.

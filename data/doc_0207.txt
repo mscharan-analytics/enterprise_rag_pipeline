@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-02-12T23:54:18Z
-EVENT ID: SEC-5207
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.115.67
-  Request Method: GET /api/v2/payment/charge
-  Response Code: 500
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: India.

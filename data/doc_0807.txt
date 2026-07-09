@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-06-19T14:27:22Z
-EVENT ID: SEC-5807
-Severity: INFO
-Payload:
-  IP Source: 192.168.247.129
-  Request Method: POST /admin/database/truncate
-  Response Code: 200
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-02-26T02:13:51Z
-EVENT ID: SEC-5167
-Severity: INFO
-Payload:
-  IP Source: 192.168.31.23
-  Request Method: GET /api/v2/payment/charge
-  Response Code: 401
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Russia.

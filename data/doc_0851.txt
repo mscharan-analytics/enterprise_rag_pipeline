@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-05-28T00:28:25Z
-EVENT ID: SEC-5851
-Severity: ALERT
-Payload:
-  IP Source: 192.168.189.40
-  Request Method: GET /static/images/hero.jpg
-  Response Code: 404
-  Action Taken: RATE-LIMITED
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: China.

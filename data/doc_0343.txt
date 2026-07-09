@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-24T09:14:24Z
-EVENT ID: SEC-5343
-Severity: INFO
-Payload:
-  IP Source: 192.168.26.104
-  Request Method: GET /admin/database/truncate
-  Response Code: 403
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: China.

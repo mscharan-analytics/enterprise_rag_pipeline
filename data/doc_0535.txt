@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-14T15:18:29Z
-EVENT ID: SEC-5535
-Severity: WARNING
-Payload:
-  IP Source: 192.168.95.14
-  Request Method: GET /static/images/hero.jpg
-  Response Code: 200
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: China.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-07-26T10:37:38Z
-EVENT ID: SEC-5447
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.44.16
-  Request Method: GET /api/v1/users/profile
-  Response Code: 200
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Romania.

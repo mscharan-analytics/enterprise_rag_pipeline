@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-02-16T17:19:20Z
-EVENT ID: SEC-5891
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.14.6
-  Request Method: GET /admin/database/truncate
-  Response Code: 200
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: China.

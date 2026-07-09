@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-07-16T18:58:57Z
-EVENT ID: SEC-5407
-Severity: INFO
-Payload:
-  IP Source: 192.168.81.51
-  Request Method: GET /static/images/hero.jpg
-  Response Code: 200
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Romania.

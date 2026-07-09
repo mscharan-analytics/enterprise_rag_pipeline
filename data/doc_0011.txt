@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-06-24T15:17:55Z
-EVENT ID: SEC-5011
-Severity: INFO
-Payload:
-  IP Source: 192.168.175.52
-  Request Method: PATCH /api/v2/payment/charge
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: India.

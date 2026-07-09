@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-02-23T09:42:45Z
-EVENT ID: SEC-5419
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.47.184
-  Request Method: PATCH /static/images/hero.jpg
-  Response Code: 403
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Netherlands.

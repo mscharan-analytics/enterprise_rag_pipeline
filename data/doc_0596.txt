@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 2bce742e - DATE: 2026-02-12
-Patient George Costanza, age 49, presented with acute lower back pain.
-Diagnosis: lumbar muscle strain. Treatment: Prescribed Ibuprofen at 400mg twice daily.
-Notes:   The patient reports a history of diabetes mellitus.   Follow up scheduled in 10 weeks.  
-Confidential Medical Record - For Internal Use Only.

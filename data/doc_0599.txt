@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-01-23T13:35:26Z
-EVENT ID: SEC-5599
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.207.168
-  Request Method: PATCH /api/v1/users/profile
-  Response Code: 401
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Germany.

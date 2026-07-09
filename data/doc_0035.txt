@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-07-11T06:19:25Z
-EVENT ID: SEC-5035
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.200.147
-  Request Method: PUT /admin/database/truncate
-  Response Code: 404
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Russia.

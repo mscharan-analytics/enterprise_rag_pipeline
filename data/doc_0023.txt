@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-05-13T15:54:04Z
-EVENT ID: SEC-5023
-Severity: WARNING
-Payload:
-  IP Source: 192.168.71.131
-  Request Method: PUT /api/v2/payment/charge
-  Response Code: 401
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: China.

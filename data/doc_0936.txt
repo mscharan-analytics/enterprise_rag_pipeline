@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: e506c849 - DATE: 2026-07-27
-Patient Alice Smith, age 48, presented with mild fever and dry cough.
-Diagnosis: tension headache. Treatment: Prescribed Lisinopril at 2000 IU daily.
-Notes:   The patient reports a history of no significant history.   Follow up scheduled in 3 weeks.  
-Confidential Medical Record - For Internal Use Only.

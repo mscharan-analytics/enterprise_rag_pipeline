@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-02-13T00:08:49Z
-EVENT ID: SEC-5331
-Severity: ALERT
-Payload:
-  IP Source: 192.168.63.31
-  Request Method: GET /api/v1/users/profile
-  Response Code: 200
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Netherlands.

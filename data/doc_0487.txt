@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-04-28T04:09:18Z
-EVENT ID: SEC-5487
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.234.111
-  Request Method: GET /admin/database/truncate
-  Response Code: 401
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Germany.

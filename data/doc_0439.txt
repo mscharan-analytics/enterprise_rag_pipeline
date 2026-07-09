@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-04-17T13:07:30Z
-EVENT ID: SEC-5439
-Severity: WARNING
-Payload:
-  IP Source: 192.168.213.65
-  Request Method: PATCH /static/images/hero.jpg
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: India.

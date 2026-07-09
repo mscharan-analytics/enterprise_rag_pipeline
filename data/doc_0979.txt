@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-01-24T05:17:24Z
-EVENT ID: SEC-5979
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.202.230
-  Request Method: DELETE /api/v2/payment/charge
-  Response Code: 403
-  Action Taken: RATE-LIMITED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Romania.

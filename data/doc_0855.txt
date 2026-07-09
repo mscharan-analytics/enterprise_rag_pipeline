@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-07-20T17:35:16Z
-EVENT ID: SEC-5855
-Severity: ALERT
-Payload:
-  IP Source: 192.168.74.221
-  Request Method: PUT /api/v1/auth/login
-  Response Code: 200
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: India.

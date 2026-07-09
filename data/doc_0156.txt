@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 51abba01 - DATE: 2026-01-20
-Patient Fiona Gallagher, age 37, presented with mild fever and dry cough.
-Diagnosis: suspected viral infection. Treatment: Prescribed Vitamin D supplements at 400mg twice daily.
-Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 12 weeks.  
-Confidential Medical Record - For Internal Use Only.

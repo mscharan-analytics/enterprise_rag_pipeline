@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-02-24T17:35:08Z
-EVENT ID: SEC-5387
-Severity: INFO
-Payload:
-  IP Source: 192.168.68.72
-  Request Method: PUT /api/v1/auth/login
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Russia.

@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 2c517267 - DATE: 2026-01-14
-Patient Charlie Brown, age 52, presented with persistent fatigue.
-Diagnosis: essential hypertension. Treatment: Prescribed Ibuprofen at 2000 IU daily.
-Notes:   The patient reports a history of diabetes mellitus.   Follow up scheduled in 10 weeks.  
-Confidential Medical Record - For Internal Use Only.

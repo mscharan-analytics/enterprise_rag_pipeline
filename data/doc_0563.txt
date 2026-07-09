@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-01-21T22:40:34Z
-EVENT ID: SEC-5563
-Severity: INFO
-Payload:
-  IP Source: 192.168.114.222
-  Request Method: PATCH /static/images/hero.jpg
-  Response Code: 404
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

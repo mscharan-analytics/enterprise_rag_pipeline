@@ -1,90 +1,26 @@
 import os
-import sys
-
-# macOS and PySpark environment safety configurations
-os.environ["OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
-os.environ["TOKENIZERS_PARALLELISM"] = "false"
-os.environ["SPARK_PYTHON_WORKER_FAULTHANDLER_ENABLED"] = "true"
-os.environ["PYSPARK_PYTHON"] = sys.executable
-os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
-
-# Ensure Java environment variables are set correctly for PySpark
-os.environ["JAVA_HOME"] = "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
-os.environ["PATH"] = f"/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:{os.environ.get('PATH', '')}"
-
-from pyspark.sql import SparkSession
-import pyspark.sql.functions as F
+import uuid
 from pyspark.sql.types import ArrayType, StructType, StructField, StringType, IntegerType
+import pyspark.sql.functions as F
 
-from src.config import (
-    USE_EMBEDDED_QDRANT, QDRANT_URL, QDRANT_STORAGE_PATH, COLLECTION_NAME, DATA_DIR
-)
-from src.ingestion.chunker import RecursiveCharacterChunker
+from src.config import DATA_DIR
+from src.connections.qdrant import QdrantConnectionManager
+from src.connections.spark import SparkSessionManager
+from src.utils.logger import setup_logger
 
-def setup_qdrant_collection():
-    """
-    Initializes/re-creates the Qdrant collection configured with:
-    - named dense vector field (384 dimensions for BGE)
-    - named sparse vector field (for keyword indexing)
-    - Scalar Quantization (INT8) for memory optimization at scale.
-    """
-    from qdrant_client import QdrantClient
-    from qdrant_client import models
-    
-    if USE_EMBEDDED_QDRANT:
-        print(f"[Driver] Initializing Qdrant in embedded storage at '{QDRANT_STORAGE_PATH}'...")
-        client = QdrantClient(path=QDRANT_STORAGE_PATH)
-    else:
-        print(f"[Driver] Connecting to Qdrant Docker container at '{QDRANT_URL}'...")
-        client = QdrantClient(url=QDRANT_URL)
-        
-    try:
-        collections = client.get_collections().collections
-        exists = any(c.name == COLLECTION_NAME for c in collections)
-        if exists:
-            print(f"[Driver] Collection '{COLLECTION_NAME}' exists. Re-creating it to start fresh...")
-            client.delete_collection(COLLECTION_NAME)
-    except Exception as e:
-        print(f"[Driver] Could not fetch collections. Initializing collection anyway. Detail: {e}")
-        
-    client.create_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config={
-            "text-dense": models.VectorParams(
-                size=384,
-                distance=models.Distance.COSINE
-            )
-        },
-        sparse_vectors_config={
-            "text-sparse": models.SparseVectorParams(
-                index=models.SparseIndexParams(on_disk=False)
-            )
-        },
-        quantization_config=models.ScalarQuantization(
-            scalar=models.ScalarQuantizationConfig(
-                type=models.ScalarType.INT8,
-                quantile=0.99,
-                always_ram=True
-            )
-        )
-    )
-    print(f"[Driver] Collection '{COLLECTION_NAME}' created successfully with Scalar Quantization.")
-
+logger = setup_logger("ingestion_pipeline")
 
 def embed_partition(rows):
     """
     Worker-level function that runs in mapPartitions on Spark executors.
-    Loads models once per partition, processes chunks in batches,
-    generates embeddings (dense + sparse), and returns them.
+    Loads models once per partition on CPU, generates embeddings (dense + sparse), and returns.
     """
     import uuid
     from sentence_transformers import SentenceTransformer
-    from src.retrieval.sparse_encoder import SparseEncoder
-    
-    # We must re-import config on executors to avoid serialization issues
+    from src.utils.sparse_encoder import SparseEncoder
     from src.config import EMBEDDING_MODEL_NAME
     
-    # Load embedding model once per partition on CPU to prevent Metal initialization crashes in forked processes
+    # Load embedding model once per partition on CPU (Mac safe)
     model = SentenceTransformer(EMBEDDING_MODEL_NAME, device="cpu")
     sparse_encoder = SparseEncoder()
     
@@ -111,7 +47,6 @@ def embed_partition(rows):
                 "chunk_index": row.chunk_index
             })
             
-    # Process partition rows
     for row in rows:
         batch.append(row)
         if len(batch) >= 64:
@@ -124,106 +59,123 @@ def embed_partition(rows):
     return results
 
 
-def run_pipeline():
-    # 1. Initialize Qdrant DB Collection
-    setup_qdrant_collection()
-    
-    # 2. Build local PySpark session
-    print("Starting SparkSession...")
-    spark = SparkSession.builder \
-        .appName("RAG-Ingestion-Pipeline") \
-        .master("local[1]") \
-        .config("spark.driver.memory", "4g") \
-        .config("spark.sql.execution.arrow.pyspark.enabled", "true") \
-        .getOrCreate()
+class RAGIngestionPipeline:
+    """
+    Object-oriented ingestion pipeline that orchestrates cleaning, chunking,
+    hashing, embedding calculation, and ingestion of documents using Spark.
+    """
+    def __init__(
+        self,
+        spark_manager: SparkSessionManager,
+        qdrant_manager: QdrantConnectionManager
+    ):
+        self.spark_manager = spark_manager
+        self.qdrant_manager = qdrant_manager
+
+    def run(self, data_directory: str = DATA_DIR) -> int:
+        """
+        Executes the ingestion pipeline. Returns total count of chunks processed.
+        """
+        # 1. Initialize Vector Database Schema
+        logger.info("Initializing vector database schema...")
+        self.qdrant_manager.setup_collection()
         
-    try:
-        # Load raw files
-        raw_data_path = os.path.join(DATA_DIR, "*.txt")
-        print(f"Reading raw data files from {raw_data_path}...")
+        # 2. Get active Spark context
+        logger.info("Getting/Creating SparkSession...")
+        spark = self.spark_manager.get_or_create_session()
         
-        # Load whole text files as (filepath, content) tuples
-        rdd_raw = spark.sparkContext.wholeTextFiles(raw_data_path)
-        df_raw = rdd_raw.toDF(["file_path", "raw_content"])
-        
-        # Check if empty
-        if df_raw.count() == 0:
-            print("Error: No data files found. Please generate the sample dataset first.")
-            return
+        try:
+            raw_data_path = os.path.join(data_directory, "*.txt")
+            logger.info(f"Reading raw corporate logs from: '{raw_data_path}'")
             
-        # 3. Clean Text and Hash
-        df_clean = df_raw.withColumn("cleaned_content", F.regexp_replace(F.trim(df_raw.raw_content), r"\s+", " ")) \
-                         .filter(F.col("cleaned_content") != "") \
-                         .withColumn("doc_id", F.sha2(F.col("cleaned_content"), 256))
-                         
-        # 4. Define Chunking UDF
-        def get_chunks(text):
-            chunker = RecursiveCharacterChunker(chunk_size=500, chunk_overlap=50)
-            chunks = chunker.chunk_text(text)
-            return [{"chunk_text": chunk, "chunk_index": idx} for idx, chunk in enumerate(chunks)]
+            # Load whole text files as (filepath, content) tuples
+            rdd_raw = spark.sparkContext.wholeTextFiles(raw_data_path)
+            df_raw = rdd_raw.toDF(["file_path", "raw_content"])
             
-        chunk_schema = ArrayType(
-            StructType([
-                StructField("chunk_text", StringType(), False),
-                StructField("chunk_index", IntegerType(), False)
-            ])
-        )
-        
-        get_chunks_udf = F.udf(get_chunks, chunk_schema)
-        
-        # Expand document rows into chunk rows
-        df_chunks = df_clean.withColumn("chunks_arr", get_chunks_udf(F.col("cleaned_content"))) \
-                             .withColumn("chunk_data", F.explode(F.col("chunks_arr"))) \
-                             .select(
-                                 F.col("doc_id"),
-                                 F.col("chunk_data.chunk_text").alias("chunk_text"),
-                                 F.col("chunk_data.chunk_index").alias("chunk_index")
-                             )
-                             
-        print(f"Processing partition levels and running distributed embedding...")
-        # 5. Distributed Embedding generation
-        raw_points = df_chunks.rdd.mapPartitions(embed_partition).collect()
-        total_chunks = len(raw_points)
-        print(f"Generated {total_chunks} embeddings. Upserting to Qdrant...")
-        
-        # 6. Single-threaded driver upsert to prevent database lock contention
-        from qdrant_client import QdrantClient
-        from qdrant_client import models
-        if USE_EMBEDDED_QDRANT:
-            client = QdrantClient(path=QDRANT_STORAGE_PATH)
-        else:
-            client = QdrantClient(url=QDRANT_URL)
-            
-        points = []
-        for p in raw_points:
-            points.append(
-                models.PointStruct(
-                    id=p["id"],
-                    vector={
-                        "text-dense": p["dense_emb"],
-                        "text-sparse": models.SparseVector(
-                            indices=p["sparse_indices"],
-                            values=p["sparse_values"]
-                        )
-                    },
-                    payload={
-                        "doc_id": p["doc_id"],
-                        "chunk_text": p["chunk_text"],
-                        "chunk_index": p["chunk_index"]
-                    }
-                )
+            if df_raw.count() == 0:
+                logger.error(f"No source files found in data directory: {data_directory}")
+                raise FileNotFoundError(f"No files found at {raw_data_path}")
+                
+            # 3. Clean Text and Hash
+            df_clean = df_raw.withColumn(
+                "cleaned_content", 
+                F.regexp_replace(F.trim(df_raw.raw_content), r"\s+", " ")
+            ).filter(F.col("cleaned_content") != "").withColumn(
+                "doc_id", 
+                F.sha2(F.col("cleaned_content"), 256)
             )
-            if len(points) >= 100:
-                client.upsert(collection_name=COLLECTION_NAME, points=points)
-                points = []
-        if points:
-            client.upsert(collection_name=COLLECTION_NAME, points=points)
             
-        print(f"Successfully ingested {total_chunks} chunks into Qdrant '{COLLECTION_NAME}'.")
-        
-    finally:
-        print("Stopping Spark session.")
-        spark.stop()
+            # 4. Chunking (using UDF + Recursive Chunker)
+            def _get_chunks_wrapper(text):
+                from src.utils.chunker import RecursiveCharacterChunker
+                chunker = RecursiveCharacterChunker(chunk_size=500, chunk_overlap=50)
+                chunks = chunker.chunk_text(text)
+                return [{"chunk_text": chunk, "chunk_index": idx} for idx, chunk in enumerate(chunks)]
+                
+            chunk_schema = ArrayType(
+                StructType([
+                    StructField("chunk_text", StringType(), False),
+                    StructField("chunk_index", IntegerType(), False)
+                ])
+            )
+            get_chunks_udf = F.udf(_get_chunks_wrapper, chunk_schema)
+            
+            # Explode chunks into separate rows
+            df_chunks = df_clean.withColumn(
+                "chunks_arr", 
+                get_chunks_udf(F.col("cleaned_content"))
+            ).withColumn(
+                "chunk_data", 
+                F.explode(F.col("chunks_arr"))
+            ).select(
+                F.col("doc_id"),
+                F.col("chunk_data.chunk_text").alias("chunk_text"),
+                F.col("chunk_data.chunk_index").alias("chunk_index")
+            )
+            
+            logger.info("Distributed embedding calculation starting in parallel partitions...")
+            # 5. Extract Embeddings (in parallel) and collect results back to the driver
+            raw_points = df_chunks.rdd.mapPartitions(embed_partition).collect()
+            total_chunks = len(raw_points)
+            logger.info(f"Successfully generated {total_chunks} embeddings. Initiating serial database inserts...")
+            
+            # 6. Serial insertion from driver to avoid database file locks in embedded mode
+            from qdrant_client.models import PointStruct, SparseVector
+            points = []
+            for p in raw_points:
+                points.append(
+                    PointStruct(
+                        id=p["id"],
+                        vector={
+                            "text-dense": p["dense_emb"],
+                            "text-sparse": SparseVector(
+                                indices=p["sparse_indices"],
+                                values=p["sparse_values"]
+                            )
+                        },
+                        payload={
+                            "doc_id": p["doc_id"],
+                            "chunk_text": p["chunk_text"],
+                            "chunk_index": p["chunk_index"]
+                        }
+                    )
+                )
+                if len(points) >= 100:
+                    self.qdrant_manager.upsert_points(points)
+                    points = []
+            if points:
+                self.qdrant_manager.upsert_points(points)
+                
+            logger.info(f"Ingestion completed. Indexed {total_chunks} chunks.")
+            return total_chunks
+            
+        finally:
+            logger.info("Stopping Spark Session...")
+            self.spark_manager.stop_session()
 
 if __name__ == "__main__":
-    run_pipeline()
+    # Test script standalone execution path
+    spark_m = SparkSessionManager()
+    qdrant_m = QdrantConnectionManager()
+    pipeline = RAGIngestionPipeline(spark_m, qdrant_m)
+    pipeline.run()

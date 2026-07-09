@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: e3badf54 - DATE: 2026-05-15
-Patient Alice Smith, age 64, presented with chronic migraine.
-Diagnosis: contact dermatitis. Treatment: Prescribed Acetaminophen at 2000 IU daily.
-Notes:   The patient reports a history of no significant history.   Follow up scheduled in 1 weeks.  
-Confidential Medical Record - For Internal Use Only.

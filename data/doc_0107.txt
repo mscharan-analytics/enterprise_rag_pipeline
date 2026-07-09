@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-01-20T02:38:57Z
-EVENT ID: SEC-5107
-Severity: WARNING
-Payload:
-  IP Source: 192.168.130.113
-  Request Method: GET /static/images/hero.jpg
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Brazil.

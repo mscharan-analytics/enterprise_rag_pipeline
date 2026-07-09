@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-04-16T08:19:19Z
-EVENT ID: SEC-5003
-Severity: INFO
-Payload:
-  IP Source: 192.168.201.211
-  Request Method: DELETE /api/v1/users/profile
-  Response Code: 401
-  Action Taken: RATE-LIMITED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Netherlands.

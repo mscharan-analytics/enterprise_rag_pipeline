@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-07-23T03:25:12Z
-EVENT ID: SEC-5155
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.165.235
-  Request Method: POST /api/v1/users/profile
-  Response Code: 200
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Germany.

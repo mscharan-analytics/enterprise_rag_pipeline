@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-05-20T16:38:13Z
-EVENT ID: SEC-5859
-Severity: INFO
-Payload:
-  IP Source: 192.168.151.76
-  Request Method: DELETE /static/images/hero.jpg
-  Response Code: 404
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Netherlands.

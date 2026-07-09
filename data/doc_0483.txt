@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-01-16T13:16:28Z
-EVENT ID: SEC-5483
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.70.219
-  Request Method: PATCH /static/images/hero.jpg
-  Response Code: 403
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: United States.

@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 3982423a - DATE: 2026-05-21
-Patient Bob Jones, age 65, presented with mild fever and dry cough.
-Diagnosis: lumbar muscle strain. Treatment: Prescribed Physical Therapy at 10mg once daily.
-Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 1 weeks.  
-Confidential Medical Record - For Internal Use Only.

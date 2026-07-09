@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-03-25T22:11:08Z
-EVENT ID: SEC-5319
-Severity: WARNING
-Payload:
-  IP Source: 192.168.219.143
-  Request Method: POST /static/images/hero.jpg
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: United States.

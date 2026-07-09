@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-02-25T05:08:02Z
-EVENT ID: SEC-5795
-Severity: INFO
-Payload:
-  IP Source: 192.168.167.210
-  Request Method: PATCH /static/images/hero.jpg
-  Response Code: 401
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: United States.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-06-16T21:24:55Z
-EVENT ID: SEC-5431
-Severity: ALERT
-Payload:
-  IP Source: 192.168.4.24
-  Request Method: GET /admin/database/truncate
-  Response Code: 403
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Russia.

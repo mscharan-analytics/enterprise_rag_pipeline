@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 9abab826 - DATE: 2026-05-25
-Patient George Costanza, age 72, presented with acute lower back pain.
-Diagnosis: suspected viral infection. Treatment: Prescribed Physical Therapy at 400mg twice daily.
-Notes:   The patient reports a history of no significant history.   Follow up scheduled in 3 weeks.  
-Confidential Medical Record - For Internal Use Only.

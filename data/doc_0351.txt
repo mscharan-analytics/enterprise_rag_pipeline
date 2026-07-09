@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-02-18T12:59:24Z
-EVENT ID: SEC-5351
-Severity: INFO
-Payload:
-  IP Source: 192.168.134.162
-  Request Method: PUT /api/v1/users/profile
-  Response Code: 500
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Romania.

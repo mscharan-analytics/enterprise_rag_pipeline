@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-03-10T07:49:20Z
-EVENT ID: SEC-5615
-Severity: INFO
-Payload:
-  IP Source: 192.168.74.4
-  Request Method: POST /admin/database/truncate
-  Response Code: 500
-  Action Taken: RATE-LIMITED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Russia.

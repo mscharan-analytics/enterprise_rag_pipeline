@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-06-23T12:48:41Z
-EVENT ID: SEC-5919
-Severity: WARNING
-Payload:
-  IP Source: 192.168.27.126
-  Request Method: DELETE /admin/database/truncate
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Netherlands.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-02-22T20:52:43Z
-EVENT ID: SEC-5687
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.232.14
-  Request Method: PUT /api/v1/users/profile
-  Response Code: 401
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: India.

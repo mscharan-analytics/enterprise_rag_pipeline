@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-20T09:17:06Z
-EVENT ID: SEC-5847
-Severity: INFO
-Payload:
-  IP Source: 192.168.143.84
-  Request Method: POST /api/v1/users/profile
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: China.

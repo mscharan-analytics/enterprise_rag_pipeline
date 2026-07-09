@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-01-11T04:00:45Z
-EVENT ID: SEC-5567
-Severity: INFO
-Payload:
-  IP Source: 192.168.91.124
-  Request Method: PUT /api/v1/auth/login
-  Response Code: 401
-  Action Taken: RATE-LIMITED
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: United States.

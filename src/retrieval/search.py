@@ -1,89 +1,62 @@
 import time
-from qdrant_client import QdrantClient
-from qdrant_client import models
 from sentence_transformers import SentenceTransformer, CrossEncoder
 
-from src.config import (
-    USE_EMBEDDED_QDRANT, QDRANT_URL, QDRANT_STORAGE_PATH,
-    COLLECTION_NAME, EMBEDDING_MODEL_NAME, RERANK_MODEL_NAME
-)
-from src.retrieval.sparse_encoder import SparseEncoder
+from src.config import EMBEDDING_MODEL_NAME, RERANK_MODEL_NAME
+from src.connections.qdrant import QdrantConnectionManager
+from src.utils.sparse_encoder import SparseEncoder
+from src.utils.logger import setup_logger
+
+logger = setup_logger("search_engine")
 
 class RAGSearchEngine:
     """
-    Two-stage hybrid retrieval engine that combines:
-    1. Dense Embeddings (SentenceTransformers)
-    2. Sparse Text Embeddings (Custom TF-IDF Index)
-    Merged using Reciprocal Rank Fusion (RRF) in Qdrant, followed by
-    3. Cross-Encoder Reranking to extract the top-K contexts.
+    Core search engine that implements a production-grade 2-stage retrieval pipeline:
+    Stage 1: Dual-Vector Hybrid Search (Dense Cosine Similarity + Sparse Term Matching)
+             fused via Reciprocal Rank Fusion (RRF) in Qdrant.
+    Stage 2: Cross-Encoder Reranking to surface the top-K contexts.
     """
-    def __init__(self):
-        # Initialize Qdrant Client based on configurations
-        if USE_EMBEDDED_QDRANT:
-            print(f"Initializing Qdrant Client in EMBEDDED MODE at '{QDRANT_STORAGE_PATH}'...")
-            self.client = QdrantClient(path=QDRANT_STORAGE_PATH)
-        else:
-            print(f"Initializing Qdrant Client connecting to Docker container at '{QDRANT_URL}'...")
-            self.client = QdrantClient(url=QDRANT_URL)
-            
-        # Initialize Dense and Sparse Encoders
-        print(f"Loading dense embedding model: {EMBEDDING_MODEL_NAME}...")
-        self.dense_model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    def __init__(self, qdrant_manager: QdrantConnectionManager):
+        self.qdrant_manager = qdrant_manager
+        
+        # Load encoders
+        logger.info(f"Loading dense embedding model on CPU: {EMBEDDING_MODEL_NAME}...")
+        self.dense_model = SentenceTransformer(EMBEDDING_MODEL_NAME, device="cpu")
         self.sparse_encoder = SparseEncoder()
         
-        # Initialize Reranker Model
-        print(f"Loading cross-encoder reranker model: {RERANK_MODEL_NAME}...")
-        self.reranker = CrossEncoder(RERANK_MODEL_NAME)
+        # Load cross-encoder reranker
+        logger.info(f"Loading cross-encoder reranker model on CPU: {RERANK_MODEL_NAME}...")
+        self.reranker = CrossEncoder(RERANK_MODEL_NAME, device="cpu")
         
     def search(self, query_text: str, top_k_hybrid: int = 50, top_k_rerank: int = 5) -> dict:
         """
-        Executes hybrid search + reranking and returns the top contexts alongside detailed latency breakdown.
+        Executes hybrid search + cross-encoder reranking. Returns results and timing metrics.
         """
         metrics = {}
         
-        # --- Stage 1: Vector & Sparse Index Generation ---
+        # --- Stage 1a: Dense vector generation ---
         t0 = time.perf_counter()
         dense_vector = self.dense_model.encode(query_text, convert_to_numpy=True).tolist()
         t1 = time.perf_counter()
         metrics["dense_embedding_ms"] = (t1 - t0) * 1000
         
+        # --- Stage 1b: Sparse vector generation ---
         t0_sparse = time.perf_counter()
         sparse_vector = self.sparse_encoder.encode(query_text)
         t1_sparse = time.perf_counter()
         metrics["sparse_embedding_ms"] = (t1_sparse - t0_sparse) * 1000
         
-        # --- Stage 1.5: Qdrant Hybrid Query (RRF) ---
+        # --- Stage 1c: Qdrant RRF Hybrid Query ---
         t0_search = time.perf_counter()
         try:
-            # Execute Qdrant Query API using Reciprocal Rank Fusion (RRF)
-            prefetch = [
-                models.Prefetch(
-                    query=dense_vector,
-                    using="text-dense",
-                    limit=top_k_hybrid
-                ),
-                models.Prefetch(
-                    query=models.SparseVector(
-                        indices=sparse_vector["indices"],
-                        values=sparse_vector["values"]
-                    ),
-                    using="text-sparse",
-                    limit=top_k_hybrid
-                )
-            ]
-            
-            response = self.client.query_points(
-                collection_name=COLLECTION_NAME,
-                prefetch=prefetch,
-                query=models.FusionQuery(
-                    fusion=models.Fusion.RRF
-                ),
+            points = self.qdrant_manager.query_rrf(
+                dense_query=dense_vector,
+                sparse_indices=sparse_vector["indices"],
+                sparse_values=sparse_vector["values"],
                 limit=top_k_hybrid
             )
             
-            # Map response points to list of dictionaries
             raw_hits = []
-            for hit in response.points:
+            for hit in points:
                 raw_hits.append({
                     "id": hit.id,
                     "doc_id": hit.payload.get("doc_id"),
@@ -92,10 +65,11 @@ class RAGSearchEngine:
                     "score": hit.score  # RRF score
                 })
         except Exception as e:
-            print(f"Qdrant query failed: {e}. Fallback to dense-only search.")
-            # Fallback to pure-dense search if sparse index is uninitialized
-            response = self.client.search(
-                collection_name=COLLECTION_NAME,
+            logger.error(f"Qdrant Query API failed: {e}. Falling back to dense-only search.")
+            # Fallback to dense-only query
+            client = self.qdrant_manager.connect()
+            response = client.search(
+                collection_name=self.qdrant_manager.collection_name,
                 query_vector=("text-dense", dense_vector),
                 limit=top_k_hybrid
             )
@@ -115,17 +89,19 @@ class RAGSearchEngine:
         
         # --- Stage 2: Cross-Encoder Reranking ---
         if not raw_hits:
+            logger.info("No candidates returned from Stage 1 retrieval.")
             return {
                 "results": [],
+                "raw_hits": [],
                 "metrics": metrics
             }
             
         t0_rerank = time.perf_counter()
-        # Build evaluation pairs for cross-encoder
+        # Build query-chunk pairs
         pairs = [[query_text, hit["chunk_text"]] for hit in raw_hits]
         rerank_scores = self.reranker.predict(pairs).tolist()
         
-        # Attach rerank score to each hit and sort
+        # Merge scores and sort
         for hit, score in zip(raw_hits, rerank_scores):
             hit["rerank_score"] = score
             
@@ -138,6 +114,6 @@ class RAGSearchEngine:
         
         return {
             "results": top_reranked,
-            "raw_hits": raw_hits,  # Returned for UI diagnostics
+            "raw_hits": raw_hits,
             "metrics": metrics
         }

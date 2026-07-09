@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-05-18T11:49:01Z
-EVENT ID: SEC-5787
-Severity: INFO
-Payload:
-  IP Source: 192.168.85.189
-  Request Method: DELETE /api/v2/payment/charge
-  Response Code: 200
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Netherlands.

@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: b5867fe8 - DATE: 2026-02-11
-Patient George Costanza, age 67, presented with chronic migraine.
-Diagnosis: suspected viral infection. Treatment: Prescribed Ibuprofen at 10mg once daily.
-Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 7 weeks.  
-Confidential Medical Record - For Internal Use Only.

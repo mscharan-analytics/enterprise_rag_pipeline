@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-06-19T22:33:34Z
-EVENT ID: SEC-5463
-Severity: ALERT
-Payload:
-  IP Source: 192.168.75.28
-  Request Method: PUT /admin/database/truncate
-  Response Code: 404
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Russia.

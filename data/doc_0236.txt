@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 4916a430 - DATE: 2026-03-23
-Patient Bob Jones, age 76, presented with mild fever and dry cough.
-Diagnosis: essential hypertension. Treatment: Prescribed Vitamin D supplements at 10mg once daily.
-Notes:   The patient reports a history of mild asthma.   Follow up scheduled in 6 weeks.  
-Confidential Medical Record - For Internal Use Only.

@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: b8e5bfee - DATE: 2026-01-23
-Patient Bob Jones, age 42, presented with persistent fatigue.
-Diagnosis: tension headache. Treatment: Prescribed Physical Therapy at 400mg twice daily.
-Notes:   The patient reports a history of seasonal allergies.   Follow up scheduled in 8 weeks.  
-Confidential Medical Record - For Internal Use Only.

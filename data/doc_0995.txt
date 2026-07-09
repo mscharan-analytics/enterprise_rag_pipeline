@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-02-21T12:04:55Z
-EVENT ID: SEC-5995
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.132.196
-  Request Method: POST /api/v2/payment/charge
-  Response Code: 500
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Romania.

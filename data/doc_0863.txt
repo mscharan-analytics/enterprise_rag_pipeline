@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-03-11T02:33:04Z
-EVENT ID: SEC-5863
-Severity: WARNING
-Payload:
-  IP Source: 192.168.124.76
-  Request Method: PUT /api/v2/payment/charge
-  Response Code: 401
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: United States.

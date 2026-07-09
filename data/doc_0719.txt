@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-05-20T17:06:57Z
-EVENT ID: SEC-5719
-Severity: INFO
-Payload:
-  IP Source: 192.168.198.87
-  Request Method: PUT /admin/database/truncate
-  Response Code: 403
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Russia.

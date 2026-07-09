@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-27T13:54:31Z
-EVENT ID: SEC-5059
-Severity: INFO
-Payload:
-  IP Source: 192.168.164.231
-  Request Method: DELETE /api/v1/auth/login
-  Response Code: 403
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Russia.

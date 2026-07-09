@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-13T22:36:44Z
-EVENT ID: SEC-5223
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.31.236
-  Request Method: PUT /api/v1/users/profile
-  Response Code: 200
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Romania.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-06-25T08:50:07Z
-EVENT ID: SEC-5703
-Severity: ALERT
-Payload:
-  IP Source: 192.168.150.235
-  Request Method: PUT /api/v1/users/profile
-  Response Code: 500
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Netherlands.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-07-27T16:06:16Z
-EVENT ID: SEC-5583
-Severity: ALERT
-Payload:
-  IP Source: 192.168.61.163
-  Request Method: DELETE /api/v1/users/profile
-  Response Code: 403
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: China.

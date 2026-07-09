@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: e24f1517 - DATE: 2026-01-17
-Patient Bob Jones, age 72, presented with mild fever and dry cough.
-Diagnosis: suspected viral infection. Treatment: Prescribed Physical Therapy at apply thin layer twice daily.
-Notes:   The patient reports a history of no significant history.   Follow up scheduled in 7 weeks.  
-Confidential Medical Record - For Internal Use Only.

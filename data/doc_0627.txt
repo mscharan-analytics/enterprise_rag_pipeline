@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-03-24T05:38:29Z
-EVENT ID: SEC-5627
-Severity: WARNING
-Payload:
-  IP Source: 192.168.134.199
-  Request Method: GET /admin/database/truncate
-  Response Code: 500
-  Action Taken: BLOCKED
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: China.

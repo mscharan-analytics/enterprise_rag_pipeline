@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-06-13T04:48:37Z
-EVENT ID: SEC-5623
-Severity: WARNING
-Payload:
-  IP Source: 192.168.17.105
-  Request Method: POST /api/v1/auth/login
-  Response Code: 500
-  Action Taken: RATE-LIMITED
-  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: India.

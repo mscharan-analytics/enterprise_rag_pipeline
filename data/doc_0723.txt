@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-04-13T18:26:54Z
-EVENT ID: SEC-5723
-Severity: ALERT
-Payload:
-  IP Source: 192.168.171.206
-  Request Method: POST /admin/database/truncate
-  Response Code: 404
-  Action Taken: ALLOWED - FLAGGED FOR REVIEW
-  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: United States.

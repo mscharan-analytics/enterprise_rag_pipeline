@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 92e0ff80 - DATE: 2026-05-27
-Patient Charlie Brown, age 57, presented with acute lower back pain.
-Diagnosis: tension headache. Treatment: Prescribed Ibuprofen at twice weekly sessions.
-Notes:   The patient reports a history of diabetes mellitus.   Follow up scheduled in 9 weeks.  
-Confidential Medical Record - For Internal Use Only.

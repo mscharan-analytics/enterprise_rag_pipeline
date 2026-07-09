@@ -1,5 +1,0 @@
-CLINICAL LOG - ID: 779ec295 - DATE: 2026-07-20
-Patient Charlie Brown, age 41, presented with sudden skin rash.
-Diagnosis: lumbar muscle strain. Treatment: Prescribed Ibuprofen at 10mg once daily.
-Notes:   The patient reports a history of no significant history.   Follow up scheduled in 7 weeks.  
-Confidential Medical Record - For Internal Use Only.

@@ -1,9 +1,0 @@
-SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-01-13T19:56:07Z
-EVENT ID: SEC-5111
-Severity: CRITICAL
-Payload:
-  IP Source: 192.168.184.122
-  Request Method: GET /admin/database/truncate
-  Response Code: 404
-  Action Taken: REDIRECTED TO HONEYPOT
-  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: India.
