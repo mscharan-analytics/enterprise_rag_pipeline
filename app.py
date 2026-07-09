@@ -8,120 +8,164 @@ import streamlit as st
 
 # Page Configuration
 st.set_page_config(
-    page_title="Enterprise Scale-Ready RAG Control Center",
-    page_icon="⚡",
+    page_title="Enterprise Document Intelligence Portal",
+    page_icon="💼",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Shared Styling (Glassmorphism, Slate Dark Theme, Highlights)
+# Custom Enterprise-Grade Styling (Clean, light-themed SaaS dashboard layout)
 st.markdown("""
 <style>
+    /* Main Background & Typography */
     .stApp {
-        background-color: #0d1117;
-        color: #c9d1d9;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        background-color: #f8fafc;
+        color: #0f172a;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     
+    /* Global Headings */
     .main-title {
-        font-size: 2.6rem;
-        font-weight: 800;
-        background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #1e293b;
         margin-bottom: 0.1rem;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 8px;
     }
     
     .subtitle {
-        font-size: 1.05rem;
-        color: #8b949e;
+        font-size: 0.95rem;
+        color: #64748b;
         margin-bottom: 1.5rem;
     }
     
-    /* Custom card styles */
+    /* Clean Enterprise Cards (Snowflake/AWS styled) */
     .dashboard-card {
-        background: rgba(22, 27, 34, 0.75);
-        border: 1px solid rgba(48, 54, 61, 0.8);
-        border-radius: 12px;
-        padding: 20px;
-        margin-bottom: 15px;
-        backdrop-filter: blur(12px);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px 20px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     }
     
     .card-title {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        color: #8b949e;
-        font-weight: bold;
-        margin-bottom: 8px;
+        color: #64748b;
+        font-weight: 600;
+        margin-bottom: 6px;
+        letter-spacing: 0.5px;
     }
     
     .card-value {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
         font-weight: 700;
-        color: #58a6ff;
+        color: #2563eb;
     }
     
     .card-value-cost {
-        color: #bc8cff;
+        color: #0f766e;
     }
 
-    /* Highlighted overlap text */
-    .overlap-box {
-        background: rgba(188, 140, 255, 0.1);
-        border-left: 4px solid #bc8cff;
-        padding: 12px;
+    /* Structured Response Box (Memo style) */
+    .response-container {
+        background: #ffffff;
+        border: 1px solid #cbd5e1;
+        border-left: 4px solid #2563eb;
         border-radius: 6px;
+        padding: 18px;
+        margin-top: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    }
+    
+    .response-header {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 6px;
         margin-bottom: 12px;
-        font-family: monospace;
-        font-size: 0.9rem;
-        line-height: 1.5;
     }
-    
-    .overlap-prefix {
-        color: #bc8cff;
-        font-weight: bold;
-        background: rgba(188, 140, 255, 0.15);
-        padding: 2px 4px;
-        border-radius: 3px;
-        margin-right: 4px;
-    }
-    
-    /* Diagnostic visual shapes */
-    .dia-box {
-        background: #161b22;
-        border: 1px solid #30363d;
-        border-radius: 8px;
-        padding: 12px;
+
+    /* Segmented Chunk List Box */
+    .chunk-container {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 12px 16px;
         margin-bottom: 8px;
     }
     
-    .badge-rrf {
-        background-color: #1f6feb;
-        color: white;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-size: 0.75rem;
+    .chunk-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        border-bottom: 1px dashed #e2e8f0;
+        padding-bottom: 4px;
+        margin-bottom: 6px;
+    }
+    
+    .overlap-box {
+        background: #f1f5f9;
+        border-left: 4px solid #64748b;
+        padding: 10px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        color: #334155;
+    }
+    
+    .overlap-prefix {
+        color: #2563eb;
         font-weight: bold;
+        background: #dbeafe;
+        padding: 1px 3px;
+        border-radius: 2px;
+        margin-right: 4px;
+    }
+    
+    /* Diagnostics Tab Styles */
+    .dia-row {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 10px 14px;
+        margin-bottom: 6px;
+        font-size: 0.85rem;
+    }
+    
+    .badge-rrf {
+        background-color: #eff6ff;
+        color: #1e40af;
+        border: 1px solid #bfdbfe;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-weight: 600;
     }
     
     .badge-rerank {
-        background-color: #8957e5;
-        color: white;
-        padding: 2px 8px;
-        border-radius: 10px;
-        font-size: 0.75rem;
-        font-weight: bold;
+        background-color: #faf5ff;
+        color: #6b21a8;
+        border: 1px solid #e9d5ff;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Main Titles
-st.markdown('<div class="main-title">Scale-Ready RAG Platform</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">FastAPI REST Server • Distributed Spark Pipelines • AWS S3 Integration • Cost-Optimized Token Billing</div>', unsafe_allow_html=True)
+# Main Dashboard Title
+st.markdown('<div class="main-title">Enterprise Document Intelligence Portal</div>', unsafe_allow_html=True)
+st.markdown('<div class="subtitle">Secure Document Retrieval • PySpark ETL pipelines • AWS S3 Integration • Billing Cost Analytics</div>', unsafe_allow_html=True)
 
-# Session state checks
+# Initialize Session States
 if "backend_url" not in st.session_state:
     st.session_state.backend_url = "http://localhost:8000/api/v1"
 if "connected" not in st.session_state:
@@ -130,123 +174,116 @@ if "last_query" not in st.session_state:
     st.session_state.last_query = None
 if "last_response" not in st.session_state:
     st.session_state.last_response = None
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
+if "search_history" not in st.session_state:
+    st.session_state.search_history = []
 
-# Sidebar API Connection Manager
+# Sidebar Administration Panel
 with st.sidebar:
-    st.markdown("### 🔌 Microservice Configuration")
-    st.session_state.backend_url = st.text_input("FastAPI Base Endpoint", value=st.session_state.backend_url)
+    st.markdown("### ⚙️ System Connections")
+    st.session_state.backend_url = st.text_input("API Base Endpoint", value=st.session_state.backend_url)
     
-    if st.button("🔌 Verify Connection"):
-        with st.spinner("Connecting to REST server..."):
+    if st.button("🔌 Verify API Gateway"):
+        with st.spinner("Pinging API gateway..."):
             try:
                 res = requests.get(f"{st.session_state.backend_url}/health", timeout=5)
                 if res.status_code == 200 and res.json().get("status") == "healthy":
                     st.session_state.connected = True
-                    st.success("Connected to RAG API Backend!")
+                    st.success("Successfully authenticated with API Gateway.")
                 else:
                     st.session_state.connected = False
-                    st.error("API unhealthy.")
+                    st.error("API Gateway returned an unhealthy status.")
             except Exception as e:
                 st.session_state.connected = False
-                st.error(f"Connection failed: {e}")
+                st.error(f"Cannot establish connection: {e}")
                 
     st.markdown("---")
-    st.markdown("### 🗄️ Connect Data Lakehouse")
+    st.markdown("### 🗄️ Cloud Lakehouse Loader")
     s3_bucket = st.text_input("AWS S3 Bucket", value="enterprise-rag-lakehouse")
     s3_prefix = st.text_input("S3 Ingest Prefix", value="documents/")
     
     if st.button("🚀 Synchronize S3 Lakehouse"):
         if not st.session_state.connected:
-            st.warning("Connect to the REST API backend first.")
+            st.warning("Establish connection to API Gateway first.")
         else:
-            with st.spinner("Syncing AWS S3 and running Spark ingestion..."):
+            with st.spinner("Downloading from S3 and launching PySpark ingestion..."):
                 try:
                     payload = {"bucket": s3_bucket, "prefix": s3_prefix}
                     res = requests.post(f"{st.session_state.backend_url}/ingest/s3", json=payload, timeout=120)
                     if res.status_code == 200:
                         chunks = res.json().get("total_chunks")
-                        st.success(f"Synced! Distributed Spark loaded {chunks} chunks to Pinecone.")
+                        st.success(f"ETL Complete: Indexed {chunks} document segments to Pinecone.")
                     else:
-                        st.error(f"S3 ingestion failed: {res.json().get('detail')}")
+                        st.error(f"ETL Ingestion failed: {res.json().get('detail')}")
                 except Exception as e:
-                    st.error(f"Network error: {e}")
+                    st.error(f"ETL Gateway error: {e}")
 
-# Create tabs for Multi-Tab UI dashboard
+# Multi-Tab Layout for Professional Workspace
 tabs = st.tabs([
-    "💬 Conversational Hub", 
-    "✂️ Interactive Chunking", 
-    "🔍 Retrieval & Rerank Diagnostics", 
-    "📊 Usage & Cost Analytics"
+    "📂 Natural Language Query Portal", 
+    "📐 Segment & Chunk Visualizer", 
+    "🔧 Retrieval Rerank Diagnostics", 
+    "📈 Operational Cost Analytics"
 ])
 
 # ==========================================
-# TAB 1: Conversational Hub
+# TAB 1: Natural Language Query Portal
 # ==========================================
 with tabs[0]:
-    col_chat, col_upload = st.columns([2, 1])
+    col_search, col_upload = st.columns([13, 6])
     
     with col_upload:
-        st.subheader("Ingest Documents")
-        st.info("Directly drop files or PDFs to clean, chunk, and load them into Pinecone immediately.")
+        st.markdown("### Document Upload Interface")
+        st.info("Directly upload text-based PDF or TXT files. The file will be segmented, embedded, and indexed immediately in Pinecone.")
         
-        uploaded_file = st.file_uploader("Upload PDF or TXT", type=["pdf", "txt"])
+        uploaded_file = st.file_uploader("Upload File (PDF / TXT)", type=["pdf", "txt"], label_visibility="collapsed")
         if uploaded_file is not None:
-            if st.button("⚡ Ingest Uploaded File"):
+            if st.button("⚡ Process and Index File"):
                 if not st.session_state.connected:
-                    st.warning("Please connect to the REST API backend first.")
+                    st.warning("Gateway connection required. Verify connection in the sidebar.")
                 else:
-                    with st.spinner("Uploading and indexing file..."):
+                    with st.spinner("Processing uploaded document..."):
                         try:
-                            # Post as multipart form
                             files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
                             res = requests.post(f"{st.session_state.backend_url}/upload", files=files, timeout=60)
                             if res.status_code == 200:
                                 total_chunks = res.json().get("total_chunks")
-                                st.success(f"Indexed file successfully into {total_chunks} chunks.")
+                                st.success(f"Ingested document. Indexed {total_chunks} segments.")
                             else:
-                                st.error(f"Ingestion failed: {res.json().get('detail')}")
+                                st.error(f"Upload failed: {res.json().get('detail')}")
                         except Exception as e:
                             st.error(f"Network upload error: {e}")
                             
         st.markdown("---")
-        st.subheader("Spark Batch Seed")
-        if st.button("⚡ Run PySpark Local Ingestion"):
+        st.markdown("### PySpark Batch Seeding")
+        st.markdown("Run the distributed Spark ingestion engine on local synthetic data (1,000 corporate records).")
+        if st.button("⚡ Run Spark Batch Seeding"):
             if not st.session_state.connected:
-                st.warning("Please connect to backend first.")
+                st.warning("Gateway connection required.")
             else:
-                with st.spinner("Seeding 1,000 corporate documents..."):
+                with st.spinner("Running distributed Spark pipeline..."):
                     try:
                         res = requests.post(f"{st.session_state.backend_url}/ingest", timeout=120)
                         if res.status_code == 200:
-                            st.success(f"Ingested {res.json().get('total_chunks')} chunks successfully.")
+                            st.success(f"Spark job complete. Ingested {res.json().get('total_chunks')} segments.")
                         else:
                             st.error(res.json().get("detail"))
                     except Exception as e:
-                        st.error(f"Error seeding: {e}")
+                        st.error(f"ETL pipeline failure: {e}")
 
-    with col_chat:
-        st.subheader("RAG Sandbox Chat")
+    with col_search:
+        st.markdown("### Document Search & Synthesis Portal")
         
-        # Display history
-        for msg in st.session_state.chat_history:
-            with st.chat_message(msg["role"]):
-                st.markdown(msg["content"])
-                
-        # Chat input
-        query = st.chat_input("Ask a question about policy limits, incident reports, or patient logs:")
+        # Search Box
+        query = st.text_input(
+            "Enter your corporate query (e.g. travel reimbursement, medical symptoms, incident reports):",
+            placeholder="Search query..."
+        )
+        
         if query:
-            # Display user query
-            with st.chat_message("user"):
-                st.markdown(query)
-            st.session_state.chat_history.append({"role": "user", "content": query})
-            
             if not st.session_state.connected:
-                with st.chat_message("assistant"):
-                    st.warning("Backend is not connected. Connect in the sidebar to retrieve real context.")
+                st.warning("Please establish API Gateway connection in the sidebar.")
             else:
-                with st.spinner("Querying vector database..."):
+                with st.spinner("Executing retrieval and synthesis..."):
                     try:
                         payload = {"query": query, "top_k_hybrid": 30, "top_k_rerank": 5}
                         response = requests.post(f"{st.session_state.backend_url}/query", json=payload, timeout=20)
@@ -254,38 +291,59 @@ with tabs[0]:
                         if response.status_code == 200:
                             res_data = response.json()
                             
-                            # Cache last response for Diagnostics
+                            # Cache latest lookup
                             st.session_state.last_query = query
                             st.session_state.last_response = res_data
                             
-                            # Display answer
-                            with st.chat_message("assistant"):
-                                st.markdown(res_data["answer"])
-                                # Print small sources list
-                                with st.expander("📚 Matched Source Doc References"):
-                                    for idx, context in enumerate(res_data["results"][:2]):
-                                        st.markdown(f"**Doc ID**: `{context['doc_id']}` (Chunk {context['chunk_index']})")
-                                        st.markdown(f"*'{context['chunk_text']}'*")
-                                        st.markdown("---")
-                                        
-                            st.session_state.chat_history.append({"role": "assistant", "content": res_data["answer"]})
+                            # Add query history record
+                            st.session_state.search_history.insert(0, {
+                                "query": query,
+                                "answer": res_data["answer"],
+                                "results": res_data["results"]
+                            })
                         else:
-                            st.error("Error querying backend REST API.")
+                            st.error("Error executing query against REST endpoint.")
                     except Exception as e:
-                        st.error(f"Query error: {e}")
+                        st.error(f"Network query error: {e}")
+                        
+        # Display Search Output (as a clean report memo rather than a chatbot conversation)
+        if st.session_state.search_history:
+            latest = st.session_state.search_history[0]
+            
+            st.markdown(f"""
+            <div class="response-container">
+                <div class="response-header">Document Intelligence Report - Query: "{latest['query']}"</div>
+                <div>{latest['answer']}</div>
+            </div>
+            """, unsafe_allow_html=True)
+            
+            # Display matching documents as a structured tabular summary
+            st.markdown("### Matched Reference Segments")
+            for idx, item in enumerate(latest["results"]):
+                st.markdown(f"""
+                <div class="chunk-container">
+                    <div class="chunk-header">
+                        <span>Segment {idx+1} | Source Document ID: <code>{item['doc_id']}</code></span>
+                        <span>Offset Index: {item['chunk_index']}</span>
+                    </div>
+                    <div style="font-size: 0.9rem; line-height: 1.4; color: #334155; margin-top: 4px;">
+                        "{item['chunk_text']}"
+                    </div>
+                </div>
+                """, unsafe_allow_html=True)
 
 # ==========================================
-# TAB 2: Interactive Chunking Visualizer
+# TAB 2: Segment & Chunk Visualizer
 # ==========================================
 with tabs[1]:
-    st.subheader("✂️ Recursive Chunker Visualizer")
-    st.markdown("Inspect how the sliding recursive chunker cuts input text and overlays prefixes between adjacent chunks.")
+    st.subheader("📐 Recursive Segmenter & Chunking Visualizer")
+    st.markdown("Review how text boundaries are parsed recursively, and how overlapping character slices are prepended between adjacent segments.")
     
-    col_inp, col_vis = st.columns([1, 1])
+    col_inp, col_vis = st.columns([9, 10])
     
     with col_inp:
         sample_text = st.text_area(
-            "Target Ingestion Content",
+            "Reference Text Block",
             value=(
                 "CLINICAL HEALTH REPORT - REGION 5\n"
                 "Patient Bob Jones (age 45) was admitted to St. Jude Clinical Unit on 2026-06-15. "
@@ -302,168 +360,156 @@ with tabs[1]:
                 "Description: Gateway Database session connection timeouts were observed at 14:02 UTC. "
                 "Resolution: Restarted database endpoint pool, cleared transaction locks. Service restored."
             ),
-            height=250
+            height=260
         )
-        chunk_size = st.slider("Chunk Size Limit (Characters)", 100, 800, 300, step=50)
-        chunk_overlap = st.slider("Chunk Overlap (Characters)", 10, 200, 50, step=10)
+        chunk_size = st.slider("Target Segment Size (Characters)", 100, 800, 300, step=50)
+        chunk_overlap = st.slider("Boundary Overlap Allowance (Characters)", 10, 200, 50, step=10)
         
     with col_vis:
-        # Run chunker
         from src.utils.chunker import RecursiveCharacterChunker
         chunker = RecursiveCharacterChunker(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
         chunks = chunker.chunk_text(sample_text)
         
-        st.markdown(f"**Generated Chunks**: `{len(chunks)}` Chunks")
+        st.markdown(f"**Segments Formed**: `{len(chunks)}` blocks")
         
         for idx, chunk in enumerate(chunks):
-            # Check overlap prefix from previous chunk (if any)
             overlap_prefix = ""
             main_body = chunk
             
             if idx > 0 and chunk_overlap > 0:
-                # Find matching overlap prefix at the start of the current chunk
-                # We can calculate the expected overlap characters by looking at the end of the previous chunk
                 prev = chunks[idx - 1]
                 expected_overlap = prev[-chunk_overlap:]
                 
-                # Highlight what matches
-                # If current chunk starts with overlap prefix, separate it
                 if chunk.startswith(expected_overlap):
                     overlap_prefix = expected_overlap
                     main_body = chunk[len(expected_overlap):]
                 else:
-                    # Fallback slice
                     overlap_prefix = chunk[:chunk_overlap]
                     main_body = chunk[chunk_overlap:]
             
-            st.markdown(f"**Chunk {idx+1}** (Length: `{len(chunk)}` chars):")
+            st.markdown(f"**Segment {idx+1}** (Size: `{len(chunk)}` characters):")
             if overlap_prefix:
                 st.markdown(f"""
                 <div class="overlap-box">
                     <span class="overlap-prefix">Overlap:</span>{overlap_prefix}
-                    <span style="color: #c9d1d9;">{main_body}</span>
+                    <span>{main_body}</span>
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div class="overlap-box" style="border-left-color: #58a6ff;">
-                    <span style="color: #c9d1d9;">{main_body}</span>
+                <div class="overlap-box" style="border-left-color: #2563eb; background: #f8fafc;">
+                    <span>{main_body}</span>
                 </div>
                 """, unsafe_allow_html=True)
 
 # ==========================================
-# TAB 3: Retrieval & Rerank Diagnostics
+# TAB 3: Retrieval Rerank Diagnostics
 # ==========================================
 with tabs[2]:
-    st.subheader("🔍 Two-Stage Search Diagnostics")
-    st.markdown("Inspect how Stage 1 hybrid retrieval (Pinecone RRF) candidates were re-ranked by the Stage 2 Cross-Encoder.")
+    st.subheader("🔧 Two-Stage Retrieval Diagnostics")
+    st.markdown("Analyze how the Stage 1 vector search candidates (Pinecone dotproduct) were reordered by the Stage 2 Cross-Encoder model.")
     
     if not st.session_state.last_response:
-        st.info("Submit a query in the Chat interface (Tab 1) to inspect diagnostics.")
+        st.info("Submit a search query in Tab 1 to load diagnostics.")
     else:
         last_q = st.session_state.last_query
         res_data = st.session_state.last_response
         
-        st.markdown(f"**Last Query**: *'{last_q}'*")
+        st.markdown(f"**Active Query**: *'{last_q}'*")
         
-        # Build comparison dataframe
+        # Build comparison table
         records = []
         for idx, item in enumerate(res_data["results"]):
             records.append({
-                "Rank": idx + 1,
-                "Doc ID": item["doc_id"][:12] + "...",
-                "Chunk Index": item["chunk_index"],
-                "Stage 1 RRF Score": item["score"],
-                "Stage 2 Rerank Score": item["rerank_score"],
-                "Snippet": item["chunk_text"][:100] + "..."
+                "Final Rank": idx + 1,
+                "Document Reference": item["doc_id"][:16] + "...",
+                "Segment ID": item["chunk_index"],
+                "Stage 1 DB Score": f"{item['score']:.4f}",
+                "Stage 2 Rerank Score": f"{item['rerank_score']:.4f}",
+                "Content Snippet": item["chunk_text"][:90] + "..."
             })
         df_diag = pd.DataFrame(records)
         
         st.dataframe(df_diag, use_container_width=True)
         
-        # Side by side visual flow
-        st.markdown("### Top Context Rerank Flow")
+        st.markdown("### Top Candidate Alignment Report")
         col_s1, col_s2 = st.columns(2)
         
         with col_s1:
-            st.markdown("#### Stage 1: Pinecone Query Hits")
-            # Show hits sorted by Pinecone RRF score
+            st.markdown("#### Stage 1: Raw Pinecone Hits (Sorted by DB Score)")
             s1_sorted = sorted(res_data["results"], key=lambda x: x["score"], reverse=True)
             for idx, item in enumerate(s1_sorted[:3]):
                 st.markdown(f"""
-                <div class="dia-box" style="border-left: 4px solid #1f6feb;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                        <span>Rank {idx+1} | Index: {item['chunk_index']}</span>
-                        <span class="badge-rrf">RRF: {item['score']:.4f}</span>
+                <div class="dia-row" style="border-left: 4px solid #2563eb;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: 600;">
+                        <span>Lookup Match {idx+1}</span>
+                        <span class="badge-rrf">DB Score: {item['score']:.4f}</span>
                     </div>
-                    <p style="margin: 0; font-size: 0.85rem; color: #8b949e;">{item['chunk_text'][:120]}...</p>
+                    <div style="color: #64748b; font-size: 0.8rem;">{item['chunk_text'][:120]}...</div>
                 </div>
                 """, unsafe_allow_html=True)
                 
         with col_s2:
-            st.markdown("#### Stage 2: Cross-Encoder Reranked Context")
-            # Show final reranked order
+            st.markdown("#### Stage 2: Final Re-ranked Output (Sorted by Relevance)")
             for idx, item in enumerate(res_data["results"][:3]):
                 st.markdown(f"""
-                <div class="dia-box" style="border-left: 4px solid #8957e5;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
-                        <span>Final Rank {idx+1}</span>
+                <div class="dia-row" style="border-left: 4px solid #7c3aed;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px; font-weight: 600;">
+                        <span>Rerank Rank {idx+1}</span>
                         <span class="badge-rerank">Rerank Score: {item['rerank_score']:.4f}</span>
                     </div>
-                    <p style="margin: 0; font-size: 0.85rem; color: #e6edf3;">{item['chunk_text'][:120]}...</p>
+                    <div style="color: #334155; font-size: 0.8rem;">{item['chunk_text'][:120]}...</div>
                 </div>
                 """, unsafe_allow_html=True)
 
 # ==========================================
-# TAB 4: Usage & Cost Analytics Dashboard
+# TAB 4: Operational Cost Analytics
 # ==========================================
 with tabs[3]:
-    st.subheader("📊 Token Billing & Cost Breakdown")
-    st.markdown("Monitor resource billing rates and token counts accumulated by the microservice.")
+    st.subheader("📈 System Cost & Token Consumption Report")
+    st.markdown("Operational cost tracking dashboard calculating token billing rates based on pricing schemas.")
     
     if not st.session_state.connected:
-        st.warning("Connect to the backend in the sidebar to fetch live usage statistics.")
+        st.warning("Verify connection to API Gateway in the sidebar to load billing data.")
     else:
-        # Fetch analytics
         try:
             res_an = requests.get(f"{st.session_state.backend_url}/analytics", timeout=5)
             if res_an.status_code == 200:
                 an_data = res_an.json()
                 
-                # Render Metric Cards
+                # Display metric cards
                 col1, col2, col3, col4 = st.columns(4)
                 
                 with col1:
                     st.markdown(f"""
                     <div class="dashboard-card">
-                        <div class="card-title">Accumulated Cost</div>
+                        <div class="card-title">Accumulated Billing</div>
                         <div class="card-value card-value-cost">${an_data['total_cost']:.6f}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with col2:
                     st.markdown(f"""
                     <div class="dashboard-card">
-                        <div class="card-title">Total Tokens</div>
+                        <div class="card-title">Cumulative Tokens</div>
                         <div class="card-value">{an_data['total_tokens']:,}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with col3:
                     st.markdown(f"""
                     <div class="dashboard-card">
-                        <div class="card-title">Queries Run</div>
-                        <div class="card-value" style="color: #58a6ff;">{an_data['total_queries']}</div>
+                        <div class="card-title">Total Queries Executed</div>
+                        <div class="card-value" style="color: #1e293b;">{an_data['total_queries']}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with col4:
                     st.markdown(f"""
                     <div class="dashboard-card">
-                        <div class="card-title">Ingest pipelines</div>
-                        <div class="card-value" style="color: #bc8cff;">{an_data['total_ingests']}</div>
+                        <div class="card-title">Ingestion Pipelines Run</div>
+                        <div class="card-value" style="color: #0f766e;">{an_data['total_ingests']}</div>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                # Charting Cost Allocation
-                st.markdown("### Cost Allocation Breakdown")
+                st.markdown("### Operational Cost Breakdown")
                 breakdown = an_data["cost_breakdown"]
                 
                 df_chart = pd.DataFrame({
@@ -477,32 +523,32 @@ with tabs[3]:
                     ]
                 })
                 
-                # Render Bar Chart using Altair
+                # Renders corporate-styled Altair chart
                 chart = alt.Chart(df_chart).mark_bar(
-                    cornerRadiusTopLeft=4,
-                    cornerRadiusTopRight=4
+                    size=30,
+                    cornerRadiusTopLeft=2,
+                    cornerRadiusTopRight=2
                 ).encode(
-                    x=alt.X("Phase:N", sort=None, title="Operational Phase"),
-                    y=alt.Y("Cost ($):Q", title="Cost in USD"),
-                    color=alt.Color("Phase:N", legend=None, scale=alt.Scale(scheme="purpleblue")),
+                    x=alt.X("Phase:N", sort=None, title="ETL / Query Phase"),
+                    y=alt.Y("Cost ($):Q", title="Cost in USD ($)"),
+                    color=alt.value("#2563eb"),  # Corporate Standard Blue
                     tooltip=["Phase", "Cost ($)"]
                 ).properties(
-                    height=300
+                    height=320
                 )
                 
                 st.altair_chart(chart, use_container_width=True)
                 
-                # Model Catalog Pricing
-                with st.expander("📝 Pipeline Pricing Catalog Rate Table"):
+                with st.expander("Pricing Catalog Rates Table"):
                     st.markdown("""
-                    The RAG pipeline calculates operational billing costs using standard API tokenization rates:
-                    - **Embedding Encoder (BGE-small)**: `$0.00002` per 1K tokens
-                    - **Reranker Engine (Cross-Encoder)**: `$0.00010` per 1K tokens
-                    - **LLM Prompt Input (Llama-3/Sonnet)**: `$0.00150` per 1K tokens
-                    - **LLM Response Generation**: `$0.00200` per 1K tokens
-                    - **Pinecone Serverless Index Updates**: `$0.00100` per 1K vectors upserted
+                    Standardized model rates utilized for API cost calculations:
+                    - **BGE-small Embedding**: `$0.00002` / 1K tokens
+                    - **Cross-Encoder Rerank**: `$0.00010` / 1K tokens
+                    - **LLM Input Context**: `$0.00150` / 1K tokens
+                    - **LLM Output Generation**: `$0.00200` / 1K tokens
+                    - **Pinecone Serverless writes**: `$0.00100` / 1K vectors
                     """)
             else:
-                st.error("Could not retrieve analytics data.")
+                st.error("Analytics endpoint returned an invalid response.")
         except Exception as e:
-            st.error(f"Error connecting to analytics endpoint: {e}")
+            st.error(f"Error fetching analytics data: {e}")
