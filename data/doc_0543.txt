@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-07-13T16:20:40Z
+EVENT ID: SEC-5543
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.47.120
+  Request Method: PUT /admin/database/truncate
+  Response Code: 403
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: India.

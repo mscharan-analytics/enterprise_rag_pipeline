@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-05-27T14:16:26Z
+EVENT ID: SEC-5171
+Severity: INFO
+Payload:
+  IP Source: 192.168.209.196
+  Request Method: PUT /api/v1/users/profile
+  Response Code: 200
+  Action Taken: BLOCKED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: India.

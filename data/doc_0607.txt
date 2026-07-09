@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-02-23T22:48:34Z
+EVENT ID: SEC-5607
+Severity: WARNING
+Payload:
+  IP Source: 192.168.90.80
+  Request Method: PATCH /admin/database/truncate
+  Response Code: 401
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Germany.

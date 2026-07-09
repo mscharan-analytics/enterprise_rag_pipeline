@@ -1,0 +1,11 @@
+SUPPORT TICKET #10805
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User alice.smith reported that File Upload Broker is experiencing corrupt database socket files.
+Steps taken by engineer Grace Hopper:
+1. Pinged the host (10.226.198.15).
+2. Restarted the File Upload Broker service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Resolved.
+Resolution Notes: Rebooted secondary node and scaled replica count.

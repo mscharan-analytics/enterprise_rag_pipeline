@@ -1,0 +1,11 @@
+SUPPORT TICKET #10249
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User alice.smith reported that User Profile Service is experiencing frequent connection timeouts.
+Steps taken by engineer Guido van Rossum:
+1. Pinged the host (10.19.178.21).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Resolved.
+Resolution Notes: Rebooted secondary node and scaled replica count.

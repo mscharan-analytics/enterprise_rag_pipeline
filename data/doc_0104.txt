@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: 38485bb5 - DATE: 2026-01-18
+Patient Bob Jones, age 81, presented with acute lower back pain.
+Diagnosis: contact dermatitis. Treatment: Prescribed Physical Therapy at 2000 IU daily.
+Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 3 weeks.  
+Confidential Medical Record - For Internal Use Only.

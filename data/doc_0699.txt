@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-07-15T20:26:44Z
+EVENT ID: SEC-5699
+Severity: ALERT
+Payload:
+  IP Source: 192.168.18.132
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 401
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

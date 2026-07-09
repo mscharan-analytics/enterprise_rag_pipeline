@@ -1,0 +1,11 @@
+SUPPORT TICKET #10873
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User fiona.gallagher reported that OAuth Authentication is experiencing unauthorized access attempts.
+Steps taken by engineer Guido van Rossum:
+1. Pinged the host (10.159.252.177).
+2. Restarted the OAuth Authentication service.
+3. Log message observed: 'SSL Handshake Failed'
+Status: Pending Vendor Analysis.
+Resolution Notes: Rebooted secondary node and scaled replica count.

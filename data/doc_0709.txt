@@ -1,0 +1,11 @@
+SUPPORT TICKET #10709
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User fiona.gallagher reported that User Profile Service is experiencing frequent connection timeouts.
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.210.46.232).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Escalated.
+Resolution Notes: Applied security patch and rotated private TLS keys.

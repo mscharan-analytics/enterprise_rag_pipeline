@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-07-17T17:26:17Z
+EVENT ID: SEC-5683
+Severity: ALERT
+Payload:
+  IP Source: 192.168.186.214
+  Request Method: PUT /api/v2/payment/charge
+  Response Code: 403
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Romania.

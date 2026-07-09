@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-02-24T16:14:09Z
+EVENT ID: SEC-5759
+Severity: WARNING
+Payload:
+  IP Source: 192.168.250.236
+  Request Method: POST /api/v1/users/profile
+  Response Code: 404
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Romania.

@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-03-24T16:32:56Z
+EVENT ID: SEC-5179
+Severity: WARNING
+Payload:
+  IP Source: 192.168.194.223
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 200
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

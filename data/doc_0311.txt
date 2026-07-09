@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-01-24T17:38:36Z
+EVENT ID: SEC-5311
+Severity: WARNING
+Payload:
+  IP Source: 192.168.98.165
+  Request Method: GET /api/v1/users/profile
+  Response Code: 200
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Germany.

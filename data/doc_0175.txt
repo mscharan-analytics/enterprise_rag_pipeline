@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-05-14T17:22:25Z
+EVENT ID: SEC-5175
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.157.35
+  Request Method: GET /api/v1/auth/login
+  Response Code: 500
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Russia.

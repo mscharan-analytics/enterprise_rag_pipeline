@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-06-12T04:32:36Z
+EVENT ID: SEC-5435
+Severity: WARNING
+Payload:
+  IP Source: 192.168.17.229
+  Request Method: POST /api/v1/users/profile
+  Response Code: 200
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Brazil.

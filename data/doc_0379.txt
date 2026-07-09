@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-01-28T10:04:38Z
+EVENT ID: SEC-5379
+Severity: WARNING
+Payload:
+  IP Source: 192.168.97.102
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 403
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Romania.

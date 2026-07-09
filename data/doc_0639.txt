@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-06-15T14:28:46Z
+EVENT ID: SEC-5639
+Severity: WARNING
+Payload:
+  IP Source: 192.168.150.181
+  Request Method: PUT /admin/database/truncate
+  Response Code: 500
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

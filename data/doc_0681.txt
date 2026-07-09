@@ -1,0 +1,11 @@
+SUPPORT TICKET #10681
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User diana.prince reported that User Profile Service is experiencing out of memory crash (OOM).
+Steps taken by engineer Ada Lovelace:
+1. Pinged the host (10.165.145.211).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Closed.
+Resolution Notes: Applied security patch and rotated private TLS keys.

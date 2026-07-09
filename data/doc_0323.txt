@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-03-26T10:45:34Z
+EVENT ID: SEC-5323
+Severity: WARNING
+Payload:
+  IP Source: 192.168.56.229
+  Request Method: POST /api/v2/payment/charge
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Romania.

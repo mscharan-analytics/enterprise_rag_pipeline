@@ -1,0 +1,11 @@
+SUPPORT TICKET #10793
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User george.costanza reported that Database Gateway is experiencing unauthorized access attempts.
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.126.58.12).
+2. Restarted the Database Gateway service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Resolved.
+Resolution Notes: Rebooted secondary node and scaled replica count.

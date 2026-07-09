@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-06-25T20:17:04Z
+EVENT ID: SEC-5415
+Severity: ALERT
+Payload:
+  IP Source: 192.168.110.31
+  Request Method: GET /admin/database/truncate
+  Response Code: 500
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: United States.

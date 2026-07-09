@@ -1,0 +1,11 @@
+SUPPORT TICKET #10641
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User bob.jones reported that User Profile Service is experiencing unauthorized access attempts.
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.128.22.58).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'Heap space out of memory'
+Status: Resolved.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

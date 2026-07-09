@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-01-14T14:38:36Z
+EVENT ID: SEC-5075
+Severity: INFO
+Payload:
+  IP Source: 192.168.100.119
+  Request Method: POST /admin/database/truncate
+  Response Code: 200
+  Action Taken: BLOCKED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: India.

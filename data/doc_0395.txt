@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-02-14T22:42:06Z
+EVENT ID: SEC-5395
+Severity: ALERT
+Payload:
+  IP Source: 192.168.132.226
+  Request Method: PUT /api/v1/users/profile
+  Response Code: 500
+  Action Taken: BLOCKED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

@@ -1,0 +1,11 @@
+SUPPORT TICKET #10625
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User charlie.brown reported that Payment Gateway is experiencing extremely high latency (over 5000ms).
+Steps taken by engineer Guido van Rossum:
+1. Pinged the host (10.218.170.172).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Closed.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

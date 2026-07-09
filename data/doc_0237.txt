@@ -1,0 +1,11 @@
+SUPPORT TICKET #10237
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User alice.smith reported that Payment Gateway is experiencing corrupt database socket files.
+Steps taken by engineer Grace Hopper:
+1. Pinged the host (10.157.161.217).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Resolved.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

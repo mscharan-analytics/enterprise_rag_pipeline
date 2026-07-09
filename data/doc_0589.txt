@@ -1,0 +1,11 @@
+SUPPORT TICKET #10589
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User george.costanza reported that OAuth Authentication is experiencing out of memory crash (OOM).
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.115.209.208).
+2. Restarted the OAuth Authentication service.
+3. Log message observed: 'SSL Handshake Failed'
+Status: Resolved.
+Resolution Notes: Applied security patch and rotated private TLS keys.

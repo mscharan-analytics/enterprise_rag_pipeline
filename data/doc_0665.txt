@@ -1,0 +1,11 @@
+SUPPORT TICKET #10665
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that OAuth Authentication is experiencing out of memory crash (OOM).
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.175.96.49).
+2. Restarted the OAuth Authentication service.
+3. Log message observed: 'Heap space out of memory'
+Status: Closed.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

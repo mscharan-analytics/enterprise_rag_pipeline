@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-07-15T06:20:52Z
+EVENT ID: SEC-5507
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.222.90
+  Request Method: PUT /api/v2/payment/charge
+  Response Code: 404
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Germany.

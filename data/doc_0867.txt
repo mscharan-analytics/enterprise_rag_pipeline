@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-02-26T02:53:14Z
+EVENT ID: SEC-5867
+Severity: INFO
+Payload:
+  IP Source: 192.168.254.181
+  Request Method: PATCH /static/images/hero.jpg
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Netherlands.

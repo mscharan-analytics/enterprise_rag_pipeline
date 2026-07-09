@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-06-26T20:22:41Z
+EVENT ID: SEC-5779
+Severity: ALERT
+Payload:
+  IP Source: 192.168.131.251
+  Request Method: POST /api/v1/users/profile
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: China.

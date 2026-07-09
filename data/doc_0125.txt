@@ -1,0 +1,11 @@
+SUPPORT TICKET #10125
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User charlie.brown reported that OAuth Authentication is experiencing corrupt database socket files.
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.100.10.81).
+2. Restarted the OAuth Authentication service.
+3. Log message observed: 'Heap space out of memory'
+Status: Pending Vendor Analysis.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

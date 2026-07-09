@@ -1,0 +1,11 @@
+SUPPORT TICKET #10757
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User fiona.gallagher reported that OAuth Authentication is experiencing corrupt database socket files.
+Steps taken by engineer Ada Lovelace:
+1. Pinged the host (10.109.46.80).
+2. Restarted the OAuth Authentication service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Resolved.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

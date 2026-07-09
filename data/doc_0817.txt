@@ -1,0 +1,11 @@
+SUPPORT TICKET #10817
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that User Profile Service is experiencing unauthorized access attempts.
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.214.38.69).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Resolved.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

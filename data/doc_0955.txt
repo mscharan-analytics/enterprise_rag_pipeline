@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-06-25T09:11:29Z
+EVENT ID: SEC-5955
+Severity: ALERT
+Payload:
+  IP Source: 192.168.194.73
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 404
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Russia.

@@ -1,0 +1,11 @@
+SUPPORT TICKET #10241
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User fiona.gallagher reported that User Profile Service is experiencing frequent connection timeouts.
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.147.0.1).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'SSL Handshake Failed'
+Status: Resolved.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

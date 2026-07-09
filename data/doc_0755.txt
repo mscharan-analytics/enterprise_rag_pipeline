@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-04-24T15:22:56Z
+EVENT ID: SEC-5755
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.37.148
+  Request Method: POST /api/v2/payment/charge
+  Response Code: 200
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Russia.

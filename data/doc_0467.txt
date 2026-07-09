@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-03-12T04:50:56Z
+EVENT ID: SEC-5467
+Severity: WARNING
+Payload:
+  IP Source: 192.168.70.210
+  Request Method: DELETE /api/v1/auth/login
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Russia.

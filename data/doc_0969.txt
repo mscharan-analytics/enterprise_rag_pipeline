@@ -1,0 +1,11 @@
+SUPPORT TICKET #10969
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that Database Gateway is experiencing out of memory crash (OOM).
+Steps taken by engineer Grace Hopper:
+1. Pinged the host (10.242.77.172).
+2. Restarted the Database Gateway service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Escalated.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

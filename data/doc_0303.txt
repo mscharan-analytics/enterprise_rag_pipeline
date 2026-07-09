@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-03-10T02:34:19Z
+EVENT ID: SEC-5303
+Severity: ALERT
+Payload:
+  IP Source: 192.168.184.229
+  Request Method: POST /static/images/hero.jpg
+  Response Code: 404
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Russia.

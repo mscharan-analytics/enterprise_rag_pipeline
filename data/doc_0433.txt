@@ -1,0 +1,11 @@
+SUPPORT TICKET #10433
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User helen.mirren reported that File Upload Broker is experiencing out of memory crash (OOM).
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.213.3.188).
+2. Restarted the File Upload Broker service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Pending Vendor Analysis.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

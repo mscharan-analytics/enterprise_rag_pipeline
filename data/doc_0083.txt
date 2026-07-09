@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-06-13T11:55:21Z
+EVENT ID: SEC-5083
+Severity: ALERT
+Payload:
+  IP Source: 192.168.207.98
+  Request Method: GET /api/v2/payment/charge
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: China.

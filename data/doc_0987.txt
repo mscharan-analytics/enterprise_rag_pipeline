@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-01-23T12:52:09Z
+EVENT ID: SEC-5987
+Severity: WARNING
+Payload:
+  IP Source: 192.168.73.44
+  Request Method: PATCH /admin/database/truncate
+  Response Code: 403
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Germany.

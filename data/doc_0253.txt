@@ -1,0 +1,11 @@
+SUPPORT TICKET #10253
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that Payment Gateway is experiencing corrupt database socket files.
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.174.147.38).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Closed.
+Resolution Notes: Applied security patch and rotated private TLS keys.

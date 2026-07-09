@@ -1,0 +1,11 @@
+SUPPORT TICKET #10597
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that OAuth Authentication is experiencing frequent connection timeouts.
+Steps taken by engineer Ada Lovelace:
+1. Pinged the host (10.149.65.173).
+2. Restarted the OAuth Authentication service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Closed.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

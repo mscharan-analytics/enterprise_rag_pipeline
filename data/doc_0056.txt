@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: 13b1da9b - DATE: 2026-04-18
+Patient Bob Jones, age 77, presented with mild fever and dry cough.
+Diagnosis: tension headache. Treatment: Prescribed Physical Therapy at twice weekly sessions.
+Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 12 weeks.  
+Confidential Medical Record - For Internal Use Only.

@@ -1,0 +1,11 @@
+SUPPORT TICKET #10321
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User george.costanza reported that Payment Gateway is experiencing unauthorized access attempts.
+Steps taken by engineer Linus Torvalds:
+1. Pinged the host (10.68.238.134).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Closed.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

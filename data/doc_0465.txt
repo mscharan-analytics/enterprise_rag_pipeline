@@ -1,0 +1,11 @@
+SUPPORT TICKET #10465
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User charlie.brown reported that Search API Indexer is experiencing frequent connection timeouts.
+Steps taken by engineer Grace Hopper:
+1. Pinged the host (10.199.72.15).
+2. Restarted the Search API Indexer service.
+3. Log message observed: 'Heap space out of memory'
+Status: Escalated.
+Resolution Notes: Rebooted secondary node and scaled replica count.

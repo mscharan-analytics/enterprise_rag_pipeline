@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-07-15T23:42:59Z
+EVENT ID: SEC-5295
+Severity: WARNING
+Payload:
+  IP Source: 192.168.123.139
+  Request Method: PUT /admin/database/truncate
+  Response Code: 500
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

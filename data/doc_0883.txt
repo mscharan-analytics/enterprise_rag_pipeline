@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-04-14T16:12:41Z
+EVENT ID: SEC-5883
+Severity: WARNING
+Payload:
+  IP Source: 192.168.204.57
+  Request Method: POST /api/v2/payment/charge
+  Response Code: 404
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

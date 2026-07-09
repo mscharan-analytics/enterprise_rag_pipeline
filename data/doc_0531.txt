@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-01-14T23:32:33Z
+EVENT ID: SEC-5531
+Severity: WARNING
+Payload:
+  IP Source: 192.168.159.232
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 200
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Russia.

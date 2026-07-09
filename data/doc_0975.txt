@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-01-27T08:50:03Z
+EVENT ID: SEC-5975
+Severity: ALERT
+Payload:
+  IP Source: 192.168.136.199
+  Request Method: POST /static/images/hero.jpg
+  Response Code: 403
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: China.

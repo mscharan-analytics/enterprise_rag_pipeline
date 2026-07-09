@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-07-22T01:11:00Z
+EVENT ID: SEC-5307
+Severity: WARNING
+Payload:
+  IP Source: 192.168.71.60
+  Request Method: PATCH /admin/database/truncate
+  Response Code: 200
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: India.

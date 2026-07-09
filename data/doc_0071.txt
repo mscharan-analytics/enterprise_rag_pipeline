@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-14T08:28:56Z
+EVENT ID: SEC-5071
+Severity: INFO
+Payload:
+  IP Source: 192.168.146.125
+  Request Method: PATCH /api/v2/payment/charge
+  Response Code: 200
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Brazil.

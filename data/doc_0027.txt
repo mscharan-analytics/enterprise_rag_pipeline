@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-03-17T20:51:00Z
+EVENT ID: SEC-5027
+Severity: WARNING
+Payload:
+  IP Source: 192.168.124.156
+  Request Method: PATCH /api/v1/users/profile
+  Response Code: 403
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Brazil.

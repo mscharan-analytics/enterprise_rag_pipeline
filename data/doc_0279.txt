@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-01-16T19:53:51Z
+EVENT ID: SEC-5279
+Severity: ALERT
+Payload:
+  IP Source: 192.168.226.10
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 403
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Brazil.

@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-03-14T14:38:37Z
+EVENT ID: SEC-5203
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.146.101
+  Request Method: PATCH /api/v1/users/profile
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Russia.

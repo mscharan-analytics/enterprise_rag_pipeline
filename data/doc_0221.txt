@@ -1,0 +1,11 @@
+SUPPORT TICKET #10221
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User george.costanza reported that Database Gateway is experiencing extremely high latency (over 5000ms).
+Steps taken by engineer Linus Torvalds:
+1. Pinged the host (10.251.160.128).
+2. Restarted the Database Gateway service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Closed.
+Resolution Notes: Applied security patch and rotated private TLS keys.

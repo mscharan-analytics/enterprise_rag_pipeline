@@ -1,0 +1,11 @@
+SUPPORT TICKET #10189
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User helen.mirren reported that User Profile Service is experiencing extremely high latency (over 5000ms).
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.98.209.177).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Pending Vendor Analysis.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

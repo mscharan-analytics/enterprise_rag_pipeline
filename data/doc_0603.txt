@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-06-17T07:52:24Z
+EVENT ID: SEC-5603
+Severity: WARNING
+Payload:
+  IP Source: 192.168.32.7
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 403
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: United States.

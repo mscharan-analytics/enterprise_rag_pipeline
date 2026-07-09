@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-01-10T06:03:52Z
+EVENT ID: SEC-5095
+Severity: ALERT
+Payload:
+  IP Source: 192.168.172.243
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 404
+  Action Taken: BLOCKED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Netherlands.

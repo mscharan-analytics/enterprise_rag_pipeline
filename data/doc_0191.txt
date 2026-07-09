@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-07-28T19:39:16Z
+EVENT ID: SEC-5191
+Severity: INFO
+Payload:
+  IP Source: 192.168.154.123
+  Request Method: POST /api/v1/users/profile
+  Response Code: 401
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

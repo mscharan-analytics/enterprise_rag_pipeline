@@ -1,0 +1,11 @@
+SUPPORT TICKET #10513
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User fiona.gallagher reported that Payment Gateway is experiencing unauthorized access attempts.
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.86.4.107).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Resolved.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

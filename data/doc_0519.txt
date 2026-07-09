@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-04-24T06:15:38Z
+EVENT ID: SEC-5519
+Severity: WARNING
+Payload:
+  IP Source: 192.168.132.110
+  Request Method: DELETE /api/v1/users/profile
+  Response Code: 200
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: United States.

@@ -1,0 +1,11 @@
+SUPPORT TICKET #10593
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that User Profile Service is experiencing out of memory crash (OOM).
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.163.190.237).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Pending Vendor Analysis.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

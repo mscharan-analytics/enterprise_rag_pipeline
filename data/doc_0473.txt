@@ -1,0 +1,11 @@
+SUPPORT TICKET #10473
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User charlie.brown reported that User Profile Service is experiencing extremely high latency (over 5000ms).
+Steps taken by engineer Ada Lovelace:
+1. Pinged the host (10.15.206.108).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Pending Vendor Analysis.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-01-25T03:26:06Z
+EVENT ID: SEC-5647
+Severity: INFO
+Payload:
+  IP Source: 192.168.68.90
+  Request Method: POST /api/v2/payment/charge
+  Response Code: 404
+  Action Taken: BLOCKED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Russia.

@@ -1,0 +1,11 @@
+SUPPORT TICKET #10937
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User george.costanza reported that Payment Gateway is experiencing frequent connection timeouts.
+Steps taken by engineer Ada Lovelace:
+1. Pinged the host (10.44.234.3).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Escalated.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

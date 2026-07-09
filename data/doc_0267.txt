@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-04-16T15:15:46Z
+EVENT ID: SEC-5267
+Severity: INFO
+Payload:
+  IP Source: 192.168.163.32
+  Request Method: DELETE /static/images/hero.jpg
+  Response Code: 200
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Netherlands.

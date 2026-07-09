@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-05-13T18:03:51Z
+EVENT ID: SEC-5803
+Severity: INFO
+Payload:
+  IP Source: 192.168.107.253
+  Request Method: DELETE /api/v1/auth/login
+  Response Code: 404
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Netherlands.

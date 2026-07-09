@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-04-13T08:33:30Z
+EVENT ID: SEC-5123
+Severity: WARNING
+Payload:
+  IP Source: 192.168.185.165
+  Request Method: PUT /admin/database/truncate
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Germany.

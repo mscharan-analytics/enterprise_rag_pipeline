@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-04-27T03:10:12Z
+EVENT ID: SEC-5391
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.179.190
+  Request Method: POST /admin/database/truncate
+  Response Code: 200
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Russia.

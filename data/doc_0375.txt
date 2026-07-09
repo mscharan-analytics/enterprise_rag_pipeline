@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-05-24T03:53:50Z
+EVENT ID: SEC-5375
+Severity: INFO
+Payload:
+  IP Source: 192.168.152.121
+  Request Method: PUT /api/v1/users/profile
+  Response Code: 401
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

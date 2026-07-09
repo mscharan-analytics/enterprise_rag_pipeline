@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-05-11T15:21:48Z
+EVENT ID: SEC-5831
+Severity: WARNING
+Payload:
+  IP Source: 192.168.158.236
+  Request Method: POST /api/v2/payment/charge
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: China.

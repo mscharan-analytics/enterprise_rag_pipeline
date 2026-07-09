@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-04-14T09:35:17Z
+EVENT ID: SEC-5227
+Severity: INFO
+Payload:
+  IP Source: 192.168.195.161
+  Request Method: POST /static/images/hero.jpg
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Germany.

@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: 7ac0f4dc - DATE: 2026-07-16
+Patient Charlie Brown, age 71, presented with chronic migraine.
+Diagnosis: suspected viral infection. Treatment: Prescribed Physical Therapy at 10mg once daily.
+Notes:   The patient reports a history of seasonal allergies.   Follow up scheduled in 12 weeks.  
+Confidential Medical Record - For Internal Use Only.

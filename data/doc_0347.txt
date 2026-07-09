@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-06-12T18:09:00Z
+EVENT ID: SEC-5347
+Severity: INFO
+Payload:
+  IP Source: 192.168.102.171
+  Request Method: DELETE /api/v1/users/profile
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Netherlands.

@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-04-28T07:47:19Z
+EVENT ID: SEC-5843
+Severity: ALERT
+Payload:
+  IP Source: 192.168.79.176
+  Request Method: POST /api/v1/auth/login
+  Response Code: 404
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Germany.

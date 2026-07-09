@@ -1,0 +1,11 @@
+SUPPORT TICKET #10313
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User helen.mirren reported that Search API Indexer is experiencing extremely high latency (over 5000ms).
+Steps taken by engineer Guido van Rossum:
+1. Pinged the host (10.6.222.50).
+2. Restarted the Search API Indexer service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Escalated.
+Resolution Notes: Rebooted secondary node and scaled replica count.

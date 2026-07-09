@@ -1,0 +1,65 @@
+import os
+import sys
+
+# macOS and PySpark environment safety configurations
+os.environ["OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+os.environ["SPARK_PYTHON_WORKER_FAULTHANDLER_ENABLED"] = "true"
+os.environ["PYSPARK_PYTHON"] = sys.executable
+os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
+
+# Ensure Java environment variables are set correctly for local PySpark
+os.environ["JAVA_HOME"] = "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
+os.environ["PATH"] = f"/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:{os.environ.get('PATH', '')}"
+
+# Force use of Embedded Qdrant mode for local verification
+os.environ["USE_EMBEDDED_QDRANT"] = "True"
+
+# Add current directory to python path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from data import generate_data
+from src.ingestion import pipeline
+from src.retrieval.search import RAGSearchEngine
+
+def main():
+    print("=== [RAG Pipeline Verification Start] ===")
+    
+    # 1. Generate Dataset
+    print("\n1. Triggering data generation...")
+    generate_data.main()
+    
+    # 2. Run Spark Ingestion
+    print("\n2. Launching PySpark ingestion pipeline in local embedded mode...")
+    pipeline.run_pipeline()
+    
+    # 3. Connect Search Engine
+    print("\n3. Connecting RAG Search Engine (loading SentenceTransformer & Cross-Encoder)...")
+    engine = RAGSearchEngine()
+    
+    # 4. Run Test Queries
+    queries = [
+        "Find a clinical log mentioning patient symptoms or diagnosis of contact dermatitis",
+        "Which support tickets report a database connection timeout or memory leak?",
+        "What is the standard operating procedure travel expense guideline?"
+    ]
+    
+    print("\n4. Running test search queries...")
+    for i, query in enumerate(queries, 1):
+        print(f"\n--- Test Query {i}: '{query}' ---")
+        results = engine.search(query, top_k_hybrid=15, top_k_rerank=2)
+        
+        # Output Metrics
+        print(f"Latency Performance Metrics:")
+        for k, v in results["metrics"].items():
+            print(f"  - {k}: {v:.2f} ms")
+            
+        print("\nTop 2 Reranked Context Results:")
+        for rank, res in enumerate(results["results"], 1):
+            print(f"  [{rank}] Doc: {res['doc_id'][:12]}... (Chunk {res['chunk_index']}) | Rerank Score: {res['rerank_score']:.4f}")
+            print(f"      Text: {res['chunk_text'][:150]}...")
+            
+    print("\n=== [RAG Pipeline Verification Complete] ===")
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: c6d5812c - DATE: 2026-04-19
+Patient Bob Jones, age 75, presented with elevated blood pressure.
+Diagnosis: essential hypertension. Treatment: Prescribed Lisinopril at 2000 IU daily.
+Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 9 weeks.  
+Confidential Medical Record - For Internal Use Only.

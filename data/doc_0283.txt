@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-03-10T09:20:18Z
+EVENT ID: SEC-5283
+Severity: WARNING
+Payload:
+  IP Source: 192.168.171.47
+  Request Method: GET /api/v2/payment/charge
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: China.

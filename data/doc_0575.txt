@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-02-17T10:26:34Z
+EVENT ID: SEC-5575
+Severity: INFO
+Payload:
+  IP Source: 192.168.77.63
+  Request Method: PATCH /api/v1/auth/login
+  Response Code: 200
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Netherlands.

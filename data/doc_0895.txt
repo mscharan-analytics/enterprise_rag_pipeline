@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-02-22T09:44:17Z
+EVENT ID: SEC-5895
+Severity: INFO
+Payload:
+  IP Source: 192.168.173.80
+  Request Method: PUT /api/v1/auth/login
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: United States.

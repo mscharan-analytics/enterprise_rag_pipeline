@@ -1,0 +1,11 @@
+SUPPORT TICKET #10685
+Priority: CRITICAL
+Category: Network & Infrastructure
+Description:
+  User fiona.gallagher reported that Database Gateway is experiencing frequent connection timeouts.
+Steps taken by engineer Grace Hopper:
+1. Pinged the host (10.32.233.93).
+2. Restarted the Database Gateway service.
+3. Log message observed: 'Broken pipe on write socket'
+Status: Escalated.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

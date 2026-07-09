@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: ea780659 - DATE: 2026-04-13
+Patient Alice Smith, age 32, presented with acute lower back pain.
+Diagnosis: essential hypertension. Treatment: Prescribed Lisinopril at twice weekly sessions.
+Notes:   The patient reports a history of seasonal allergies.   Follow up scheduled in 8 weeks.  
+Confidential Medical Record - For Internal Use Only.

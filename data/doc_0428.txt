@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: fe41a860 - DATE: 2026-07-15
+Patient Alice Smith, age 31, presented with chronic migraine.
+Diagnosis: tension headache. Treatment: Prescribed Physical Therapy at 2000 IU daily.
+Notes:   The patient reports a history of hypothyroidism.   Follow up scheduled in 4 weeks.  
+Confidential Medical Record - For Internal Use Only.

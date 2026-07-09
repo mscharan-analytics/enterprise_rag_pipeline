@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-01-23T05:07:26Z
+EVENT ID: SEC-5039
+Severity: WARNING
+Payload:
+  IP Source: 192.168.201.175
+  Request Method: GET /api/v2/payment/charge
+  Response Code: 404
+  Action Taken: BLOCKED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

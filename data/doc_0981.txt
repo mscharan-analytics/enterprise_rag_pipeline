@@ -1,0 +1,11 @@
+SUPPORT TICKET #10981
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User charlie.brown reported that User Profile Service is experiencing unauthorized access attempts.
+Steps taken by engineer Linus Torvalds:
+1. Pinged the host (10.114.77.165).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Closed.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

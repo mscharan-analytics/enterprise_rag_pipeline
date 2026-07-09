@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-03-11T04:12:52Z
+EVENT ID: SEC-5947
+Severity: INFO
+Payload:
+  IP Source: 192.168.81.102
+  Request Method: PATCH /static/images/hero.jpg
+  Response Code: 403
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Brazil.

@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-05-10T17:12:06Z
+EVENT ID: SEC-5879
+Severity: ALERT
+Payload:
+  IP Source: 192.168.215.166
+  Request Method: POST /admin/database/truncate
+  Response Code: 403
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

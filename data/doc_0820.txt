@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: 7b4b838f - DATE: 2026-06-17
+Patient Bob Jones, age 67, presented with elevated blood pressure.
+Diagnosis: essential hypertension. Treatment: Prescribed Lisinopril at apply thin layer twice daily.
+Notes:   The patient reports a history of seasonal allergies.   Follow up scheduled in 9 weeks.  
+Confidential Medical Record - For Internal Use Only.

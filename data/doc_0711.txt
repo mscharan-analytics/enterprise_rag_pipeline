@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-03-15T13:21:27Z
+EVENT ID: SEC-5711
+Severity: WARNING
+Payload:
+  IP Source: 192.168.187.82
+  Request Method: GET /api/v1/users/profile
+  Response Code: 404
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: China.

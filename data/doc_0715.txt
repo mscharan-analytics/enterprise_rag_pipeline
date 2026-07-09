@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-03-27T08:44:46Z
+EVENT ID: SEC-5715
+Severity: INFO
+Payload:
+  IP Source: 192.168.239.13
+  Request Method: DELETE /api/v1/auth/login
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

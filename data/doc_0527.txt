@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: auth-token-broker-02 - TIMESTAMP: 2026-04-26T19:28:04Z
+EVENT ID: SEC-5527
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.133.120
+  Request Method: PATCH /api/v2/payment/charge
+  Response Code: 200
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Germany.

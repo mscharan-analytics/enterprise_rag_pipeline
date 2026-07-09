@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-06-22T16:29:07Z
+EVENT ID: SEC-5671
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.77.10
+  Request Method: GET /static/images/hero.jpg
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: India.

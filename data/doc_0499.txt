@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-02-25T00:53:24Z
+EVENT ID: SEC-5499
+Severity: WARNING
+Payload:
+  IP Source: 192.168.38.189
+  Request Method: GET /api/v1/users/profile
+  Response Code: 403
+  Action Taken: BLOCKED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Netherlands.

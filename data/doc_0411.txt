@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-02-23T09:31:07Z
+EVENT ID: SEC-5411
+Severity: INFO
+Payload:
+  IP Source: 192.168.219.181
+  Request Method: POST /admin/database/truncate
+  Response Code: 401
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Brazil.

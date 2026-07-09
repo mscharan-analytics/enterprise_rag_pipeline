@@ -1,0 +1,11 @@
+SUPPORT TICKET #10121
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User charlie.brown reported that User Profile Service is experiencing corrupt database socket files.
+Steps taken by engineer Guido van Rossum:
+1. Pinged the host (10.100.22.126).
+2. Restarted the User Profile Service service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Pending Vendor Analysis.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

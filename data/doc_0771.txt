@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-02-19T08:07:15Z
+EVENT ID: SEC-5771
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.224.19
+  Request Method: PATCH /admin/database/truncate
+  Response Code: 404
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Brazil.

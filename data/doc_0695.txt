@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-db-master - TIMESTAMP: 2026-02-13T20:47:44Z
+EVENT ID: SEC-5695
+Severity: ALERT
+Payload:
+  IP Source: 192.168.15.24
+  Request Method: PUT /api/v1/auth/login
+  Response Code: 500
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: India.

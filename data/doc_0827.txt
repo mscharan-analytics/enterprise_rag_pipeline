@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-01-26T08:15:14Z
+EVENT ID: SEC-5827
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.73.237
+  Request Method: PATCH /api/v1/users/profile
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: Brazil.

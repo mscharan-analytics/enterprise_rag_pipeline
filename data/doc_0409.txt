@@ -1,0 +1,11 @@
+SUPPORT TICKET #10409
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User george.costanza reported that Payment Gateway is experiencing corrupt database socket files.
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.180.180.5).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Escalated.
+Resolution Notes: Applied security patch and rotated private TLS keys.

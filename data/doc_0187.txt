@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-06-13T18:18:54Z
+EVENT ID: SEC-5187
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.61.70
+  Request Method: DELETE /static/images/hero.jpg
+  Response Code: 404
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Romania.

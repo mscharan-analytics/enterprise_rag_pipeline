@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-05-22T07:31:55Z
+EVENT ID: SEC-5275
+Severity: INFO
+Payload:
+  IP Source: 192.168.225.221
+  Request Method: PATCH /api/v1/users/profile
+  Response Code: 403
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: Romania.

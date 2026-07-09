@@ -1,0 +1,5 @@
+CLINICAL LOG - ID: 0ee038c5 - DATE: 2026-05-24
+Patient Bob Jones, age 59, presented with chronic migraine.
+Diagnosis: contact dermatitis. Treatment: Prescribed Lisinopril at 400mg twice daily.
+Notes:   The patient reports a history of mild asthma.   Follow up scheduled in 11 weeks.  
+Confidential Medical Record - For Internal Use Only.

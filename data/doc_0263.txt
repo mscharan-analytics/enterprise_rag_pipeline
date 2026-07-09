@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-05-21T03:52:28Z
+EVENT ID: SEC-5263
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.42.26
+  Request Method: PATCH /api/v1/users/profile
+  Response Code: 401
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: India.

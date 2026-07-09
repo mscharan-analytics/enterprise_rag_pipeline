@@ -1,0 +1,11 @@
+SUPPORT TICKET #10585
+Priority: HIGH
+Category: Network & Infrastructure
+Description:
+  User helen.mirren reported that Database Gateway is experiencing extremely high latency (over 5000ms).
+Steps taken by engineer Dennis Ritchie:
+1. Pinged the host (10.45.198.43).
+2. Restarted the Database Gateway service.
+3. Log message observed: 'Heap space out of memory'
+Status: Closed.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

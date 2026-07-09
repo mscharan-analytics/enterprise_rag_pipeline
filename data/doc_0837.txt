@@ -1,0 +1,11 @@
+SUPPORT TICKET #10837
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User fiona.gallagher reported that Payment Gateway is experiencing out of memory crash (OOM).
+Steps taken by engineer Grace Hopper:
+1. Pinged the host (10.167.17.236).
+2. Restarted the Payment Gateway service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Resolved.
+Resolution Notes: Applied security patch and rotated private TLS keys.

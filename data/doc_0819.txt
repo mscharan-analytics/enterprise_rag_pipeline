@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-06-24T14:28:56Z
+EVENT ID: SEC-5819
+Severity: INFO
+Payload:
+  IP Source: 192.168.162.208
+  Request Method: POST /api/v2/payment/charge
+  Response Code: 500
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (Windows NT 10.0; Win64) AppleWebKit/537.36' detected. Origin Country: United States.

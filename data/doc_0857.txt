@@ -1,0 +1,11 @@
+SUPPORT TICKET #10857
+Priority: LOW
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that Search API Indexer is experiencing extremely high latency (over 5000ms).
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.17.13.75).
+2. Restarted the Search API Indexer service.
+3. Log message observed: 'Heap space out of memory'
+Status: Closed.
+Resolution Notes: Rebooted secondary node and scaled replica count.

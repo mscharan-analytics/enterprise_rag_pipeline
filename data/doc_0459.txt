@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-02-26T19:52:52Z
+EVENT ID: SEC-5459
+Severity: ALERT
+Payload:
+  IP Source: 192.168.149.176
+  Request Method: POST /api/v1/users/profile
+  Response Code: 200
+  Action Taken: ALLOWED - FLAGGED FOR REVIEW
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: India.

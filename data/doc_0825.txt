@@ -1,0 +1,11 @@
+SUPPORT TICKET #10825
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that OAuth Authentication is experiencing frequent connection timeouts.
+Steps taken by engineer Guido van Rossum:
+1. Pinged the host (10.122.215.50).
+2. Restarted the OAuth Authentication service.
+3. Log message observed: 'Connection pool exhausted'
+Status: Escalated.
+Resolution Notes: Cleaned Docker heap caches and increased JVM memory limits.

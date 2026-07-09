@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: payment-api-04 - TIMESTAMP: 2026-07-14T00:43:09Z
+EVENT ID: SEC-5555
+Severity: ALERT
+Payload:
+  IP Source: 192.168.185.197
+  Request Method: POST /admin/database/truncate
+  Response Code: 401
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'curl/7.81.0' detected. Origin Country: United States.

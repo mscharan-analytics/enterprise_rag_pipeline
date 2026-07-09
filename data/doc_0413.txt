@@ -1,0 +1,11 @@
+SUPPORT TICKET #10413
+Priority: MEDIUM
+Category: Network & Infrastructure
+Description:
+  User evan.wright reported that Search API Indexer is experiencing frequent connection timeouts.
+Steps taken by engineer Ken Thompson:
+1. Pinged the host (10.54.136.107).
+2. Restarted the Search API Indexer service.
+3. Log message observed: 'NullPointerException at line 104'
+Status: Escalated.
+Resolution Notes: Re-indexed partition tables and cleared bad cache locks.

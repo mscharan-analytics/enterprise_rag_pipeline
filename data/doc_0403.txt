@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-03-19T17:44:48Z
+EVENT ID: SEC-5403
+Severity: ALERT
+Payload:
+  IP Source: 192.168.97.70
+  Request Method: PUT /api/v1/users/profile
+  Response Code: 500
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Mozilla/5.0 (compatible; MassScanner/1.0)' detected. Origin Country: Brazil.

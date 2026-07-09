@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: prod-web-01 - TIMESTAMP: 2026-05-13T03:09:19Z
+EVENT ID: SEC-5811
+Severity: INFO
+Payload:
+  IP Source: 192.168.222.53
+  Request Method: PUT /admin/database/truncate
+  Response Code: 200
+  Action Taken: RATE-LIMITED
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: Brazil.

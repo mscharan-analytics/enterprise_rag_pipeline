@@ -1,0 +1,9 @@
+SECURITY AUDIT SYSLOG - HOSTNAME: k8s-ingress-controller - TIMESTAMP: 2026-03-16T20:27:23Z
+EVENT ID: SEC-5631
+Severity: CRITICAL
+Payload:
+  IP Source: 192.168.222.208
+  Request Method: DELETE /api/v1/users/profile
+  Response Code: 401
+  Action Taken: REDIRECTED TO HONEYPOT
+  Analysis:   Suspicious user agent string 'Python-urllib/3.9' detected. Origin Country: China.
