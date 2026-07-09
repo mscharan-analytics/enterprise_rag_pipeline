@@ -2,7 +2,7 @@ import time
 from sentence_transformers import SentenceTransformer, CrossEncoder
 
 from src.config import EMBEDDING_MODEL_NAME, RERANK_MODEL_NAME
-from src.connections.qdrant import QdrantConnectionManager
+from src.connections.pinecone import PineconeConnectionManager
 from src.utils.sparse_encoder import SparseEncoder
 from src.utils.logger import setup_logger
 
@@ -12,11 +12,11 @@ class RAGSearchEngine:
     """
     Core search engine that implements a production-grade 2-stage retrieval pipeline:
     Stage 1: Dual-Vector Hybrid Search (Dense Cosine Similarity + Sparse Term Matching)
-             fused via Reciprocal Rank Fusion (RRF) in Qdrant.
+             fused via Pinecone Cloud sparse-dense lookup.
     Stage 2: Cross-Encoder Reranking to surface the top-K contexts.
     """
-    def __init__(self, qdrant_manager: QdrantConnectionManager):
-        self.qdrant_manager = qdrant_manager
+    def __init__(self, pinecone_manager: PineconeConnectionManager):
+        self.pinecone_manager = pinecone_manager
         
         # Load encoders
         logger.info(f"Loading dense embedding model on CPU: {EMBEDDING_MODEL_NAME}...")
@@ -45,11 +45,11 @@ class RAGSearchEngine:
         t1_sparse = time.perf_counter()
         metrics["sparse_embedding_ms"] = (t1_sparse - t0_sparse) * 1000
         
-        # --- Stage 1c: Qdrant RRF Hybrid Query ---
+        # --- Stage 1c: Pinecone Hybrid Query ---
         t0_search = time.perf_counter()
         try:
-            points = self.qdrant_manager.query_rrf(
-                dense_query=dense_vector,
+            points = self.pinecone_manager.query_hybrid(
+                dense_vector=dense_vector,
                 sparse_indices=sparse_vector["indices"],
                 sparse_values=sparse_vector["values"],
                 limit=top_k_hybrid
@@ -62,25 +62,26 @@ class RAGSearchEngine:
                     "doc_id": hit.payload.get("doc_id"),
                     "chunk_text": hit.payload.get("chunk_text"),
                     "chunk_index": hit.payload.get("chunk_index"),
-                    "score": hit.score  # RRF score
+                    "score": hit.score
                 })
         except Exception as e:
-            logger.error(f"Qdrant Query API failed: {e}. Falling back to dense-only search.")
+            logger.error(f"Pinecone Hybrid Query failed: {e}. Falling back to dense-only search.")
             # Fallback to dense-only query
-            client = self.qdrant_manager.connect()
-            response = client.search(
-                collection_name=self.qdrant_manager.collection_name,
-                query_vector=("text-dense", dense_vector),
-                limit=top_k_hybrid
+            index = self.pinecone_manager.get_index()
+            response = index.query(
+                vector=dense_vector,
+                top_k=top_k_hybrid,
+                include_metadata=True
             )
             raw_hits = []
-            for hit in response:
+            for match in response.matches:
+                meta = match.metadata or {}
                 raw_hits.append({
-                    "id": hit.id,
-                    "doc_id": hit.payload.get("doc_id"),
-                    "chunk_text": hit.payload.get("chunk_text"),
-                    "chunk_index": hit.payload.get("chunk_index"),
-                    "score": hit.score
+                    "id": match.id,
+                    "doc_id": meta.get("doc_id"),
+                    "chunk_text": meta.get("chunk_text"),
+                    "chunk_index": meta.get("chunk_index"),
+                    "score": match.score
                 })
                 
         t1_search = time.perf_counter()

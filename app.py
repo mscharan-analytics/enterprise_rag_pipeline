@@ -125,7 +125,7 @@ if "backend_connected" not in st.session_state:
 
 # Sidebar Controls
 with st.sidebar:
-    st.image("https://qdrant.tech/images/qdrant_logo.png", width=120)
+    st.markdown("### 🌲 Pinecone Vector DB")
     st.markdown("### REST Backend Configuration")
     
     api_url = st.text_input("FastAPI Base Endpoint", value="http://localhost:8000/api/v1")
@@ -239,7 +239,7 @@ with col_metrics:
                 <div class="metric-value">{metrics['sparse_embedding_ms']:.2f} ms</div>
             </div>
             <div class="metric-card">
-                <div class="metric-title">1c. Qdrant Hybrid Search (RRF)</div>
+                <div class="metric-title">1c. Pinecone Hybrid Search</div>
                 <div class="metric-value">{metrics['db_hybrid_search_ms']:.2f} ms</div>
             </div>
             <div class="metric-card" style="border-color: rgba(31, 111, 235, 0.4)">

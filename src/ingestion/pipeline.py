@@ -4,7 +4,7 @@ from pyspark.sql.types import ArrayType, StructType, StructField, StringType, In
 import pyspark.sql.functions as F
 
 from src.config import DATA_DIR
-from src.connections.qdrant import QdrantConnectionManager
+from src.connections.pinecone import PineconeConnectionManager
 from src.connections.spark import SparkSessionManager
 from src.utils.logger import setup_logger
 
@@ -67,18 +67,18 @@ class RAGIngestionPipeline:
     def __init__(
         self,
         spark_manager: SparkSessionManager,
-        qdrant_manager: QdrantConnectionManager
+        pinecone_manager: PineconeConnectionManager
     ):
         self.spark_manager = spark_manager
-        self.qdrant_manager = qdrant_manager
+        self.pinecone_manager = pinecone_manager
 
     def run(self, data_directory: str = DATA_DIR) -> int:
         """
         Executes the ingestion pipeline. Returns total count of chunks processed.
         """
-        # 1. Initialize Vector Database Schema
-        logger.info("Initializing vector database schema...")
-        self.qdrant_manager.setup_collection()
+        # 1. Initialize Vector Database Index
+        logger.info("Initializing vector database schema/index in Pinecone...")
+        self.pinecone_manager.setup_index()
         
         # 2. Get active Spark context
         logger.info("Getting/Creating SparkSession...")
@@ -139,32 +139,27 @@ class RAGIngestionPipeline:
             total_chunks = len(raw_points)
             logger.info(f"Successfully generated {total_chunks} embeddings. Initiating serial database inserts...")
             
-            # 6. Serial insertion from driver to avoid database file locks in embedded mode
-            from qdrant_client.models import PointStruct, SparseVector
-            points = []
+            # 6. Serial insertion from driver to avoid database indexing performance issues
+            vectors = []
             for p in raw_points:
-                points.append(
-                    PointStruct(
-                        id=p["id"],
-                        vector={
-                            "text-dense": p["dense_emb"],
-                            "text-sparse": SparseVector(
-                                indices=p["sparse_indices"],
-                                values=p["sparse_values"]
-                            )
-                        },
-                        payload={
-                            "doc_id": p["doc_id"],
-                            "chunk_text": p["chunk_text"],
-                            "chunk_index": p["chunk_index"]
-                        }
-                    )
-                )
-                if len(points) >= 100:
-                    self.qdrant_manager.upsert_points(points)
-                    points = []
-            if points:
-                self.qdrant_manager.upsert_points(points)
+                vectors.append({
+                    "id": p["id"],
+                    "values": p["dense_emb"],
+                    "sparse_values": {
+                        "indices": p["sparse_indices"],
+                        "values": p["sparse_values"]
+                    },
+                    "metadata": {
+                        "doc_id": p["doc_id"],
+                        "chunk_text": p["chunk_text"],
+                        "chunk_index": int(p["chunk_index"])
+                    }
+                })
+                if len(vectors) >= 100:
+                    self.pinecone_manager.upsert_vectors(vectors)
+                    vectors = []
+            if vectors:
+                self.pinecone_manager.upsert_vectors(vectors)
                 
             logger.info(f"Ingestion completed. Indexed {total_chunks} chunks.")
             return total_chunks
@@ -176,6 +171,6 @@ class RAGIngestionPipeline:
 if __name__ == "__main__":
     # Test script standalone execution path
     spark_m = SparkSessionManager()
-    qdrant_m = QdrantConnectionManager()
-    pipeline = RAGIngestionPipeline(spark_m, qdrant_m)
+    pinecone_m = PineconeConnectionManager()
+    pipeline = RAGIngestionPipeline(spark_m, pinecone_m)
     pipeline.run()

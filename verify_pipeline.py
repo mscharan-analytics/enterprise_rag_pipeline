@@ -12,15 +12,12 @@ os.environ["PYSPARK_DRIVER_PYTHON"] = sys.executable
 os.environ["JAVA_HOME"] = "/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home"
 os.environ["PATH"] = f"/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home/bin:{os.environ.get('PATH', '')}"
 
-# Force use of Embedded Qdrant mode for local verification
-os.environ["USE_EMBEDDED_QDRANT"] = "True"
-
 # Add current directory to python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from data import generate_data
 from src.connections.spark import SparkSessionManager
-from src.connections.qdrant import QdrantConnectionManager
+from src.connections.pinecone import PineconeConnectionManager
 from src.ingestion.pipeline import RAGIngestionPipeline
 from src.retrieval.search import RAGSearchEngine
 
@@ -34,17 +31,17 @@ def main():
     # 2. Instantiate managers
     print("\n2. Initializing OOP Connection Managers...")
     spark_manager = SparkSessionManager()
-    qdrant_manager = QdrantConnectionManager()
+    pinecone_manager = PineconeConnectionManager()
     
     # 3. Launch Ingestion
     print("\n3. Launching RAG Ingestion Pipeline...")
-    pipeline = RAGIngestionPipeline(spark_manager, qdrant_manager)
+    pipeline = RAGIngestionPipeline(spark_manager, pinecone_manager)
     total_indexed = pipeline.run()
     print(f"Ingested {total_indexed} chunks successfully.")
     
     # 4. Instantiate Search
     print("\n4. Initializing RAG Search Engine...")
-    engine = RAGSearchEngine(qdrant_manager)
+    engine = RAGSearchEngine(pinecone_manager)
     
     # 5. Run Test Queries
     queries = [

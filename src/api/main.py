@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from contextlib import asynccontextmanager
 import uvicorn
 
-from src.connections.qdrant import QdrantConnectionManager
+from src.connections.pinecone import PineconeConnectionManager
 from src.connections.spark import SparkSessionManager
 from src.ingestion.pipeline import RAGIngestionPipeline
 from src.retrieval.search import RAGSearchEngine
@@ -21,11 +21,11 @@ async def lifespan(app: FastAPI):
     
     # 1. Instantiate managers
     spark_manager = SparkSessionManager()
-    qdrant_manager = QdrantConnectionManager()
+    pinecone_manager = PineconeConnectionManager()
     
     # 2. Instantiate engines
-    ingestion_pipeline = RAGIngestionPipeline(spark_manager, qdrant_manager)
-    search_engine = RAGSearchEngine(qdrant_manager)
+    ingestion_pipeline = RAGIngestionPipeline(spark_manager, pinecone_manager)
+    search_engine = RAGSearchEngine(pinecone_manager)
     
     # 3. Cache services in app state
     app.state.ingestion_pipeline = ingestion_pipeline
