@@ -1,6 +1,8 @@
 import os
 import sys
 import time
+import socket
+import subprocess
 import requests
 import pandas as pd
 import altair as alt
@@ -14,17 +16,17 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom styling representing a modern, premium "Docs & Knowledge Hub" (similar to Lovable templates)
+# Shared Styling (Indigo theme, clean typography)
 st.markdown("""
 <style>
-    /* Global Background and Typography (Inter-like modern sans-serif) */
+    /* Global Background and Typography */
     .stApp {
         background-color: #fafbfc;
         color: #1e293b;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     }
     
-    /* Top Navigation Header (Modern DocHub styled) */
+    /* Top Navigation Header */
     .hub-header {
         display: flex;
         justify-content: space-between;
@@ -38,7 +40,7 @@ st.markdown("""
     .hub-logo {
         font-size: 1.3rem;
         font-weight: 800;
-        color: #4f46e5; /* Premium Indigo */
+        color: #4f46e5;
         letter-spacing: -0.5px;
     }
     .hub-status {
@@ -72,7 +74,7 @@ st.markdown("""
         line-height: 1.5;
     }
 
-    /* Premium Modern Cards (Soft shadows, rounded edges) */
+    /* Cards */
     .hub-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
@@ -80,10 +82,6 @@ st.markdown("""
         padding: 24px;
         margin-bottom: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .hub-card:hover {
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
     }
     .hub-card-title {
         font-size: 0.95rem;
@@ -94,18 +92,17 @@ st.markdown("""
         padding-bottom: 10px;
     }
     
-    /* Modern Query Search Input Area */
     .search-container {
         max-width: 680px;
         margin: 0 auto 30px auto;
         text-align: center;
     }
 
-    /* Executive Intelligence Report Style */
+    /* Report Memo style */
     .report-memo {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
-        border-left: 4px solid #4f46e5; /* Indigo Accent */
+        border-left: 4px solid #4f46e5;
         border-radius: 8px;
         padding: 20px 24px;
         margin-bottom: 25px;
@@ -122,7 +119,7 @@ st.markdown("""
         padding-bottom: 6px;
     }
     
-    /* Clean Reference Segment Cards */
+    /* Reference Segment Cards */
     .segment-card {
         background-color: #ffffff;
         border: 1px solid #e2e8f0;
@@ -159,7 +156,7 @@ st.markdown("""
         transform: translateY(-0.5px);
     }
     
-    /* Analytical Metrics Grid */
+    /* Analytic Tiles */
     .analytic-tile {
         background: #ffffff;
         border: 1px solid #e2e8f0;
@@ -185,7 +182,7 @@ st.markdown("""
         color: #0f766e;
     }
 
-    /* Monospace Chunk Box */
+    /* Monospace Chunks */
     .monobox {
         background-color: #fafbfc;
         border: 1px solid #e2e8f0;
@@ -205,7 +202,7 @@ st.markdown("""
         margin-right: 4px;
     }
 
-    /* Diagnostic Lists */
+    /* Diagnostics */
     .diag-item {
         border-bottom: 1px solid #f1f5f9;
         padding: 8px 0;
@@ -231,6 +228,31 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Programmatically launch FastAPI service on port 8000 if not running
+@st.cache_resource
+def launch_background_api():
+    """
+    Check if FastAPI server is already running on port 8000.
+    If not, launch it programmatically in a separate subprocess.
+    """
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    port_in_use = False
+    try:
+        s.bind(("127.0.0.1", 8000))
+    except socket.error:
+        port_in_use = True
+    finally:
+        s.close()
+        
+    if not port_in_use:
+        # Launch using the current python interpreter running streamlit
+        subprocess.Popen([sys.executable, "-m", "uvicorn", "src.api.main:app", "--host", "127.0.0.1", "--port", "8000"])
+        # Wait a moment for application startup
+        time.sleep(3)
+
+# Initialize background API
+launch_background_api()
+
 # 1. Premium Header Navigation
 st.markdown("""
 <div class="hub-header">
@@ -250,6 +272,15 @@ if "last_response" not in st.session_state:
     st.session_state.last_response = None
 if "results_list" not in st.session_state:
     st.session_state.results_list = []
+
+# Verify localhost connection automatically on first load
+if not st.session_state.connected:
+    try:
+        res = requests.get(f"{st.session_state.backend_url}/health", timeout=3)
+        if res.status_code == 200 and res.json().get("status") == "healthy":
+            st.session_state.connected = True
+    except Exception:
+        pass
 
 # Sidebar Config
 with st.sidebar:
