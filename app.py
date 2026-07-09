@@ -8,205 +8,234 @@ import streamlit as st
 
 # Page Configuration
 st.set_page_config(
-    page_title="AWS Document Intelligence Console",
-    page_icon="☁️",
+    page_title="Document Intelligence Hub",
+    page_icon="📂",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS mimicking the AWS Management Console Design System (Amazon Ember UI style)
+# Custom styling representing a modern, premium "Docs & Knowledge Hub" (similar to Lovable templates)
 st.markdown("""
 <style>
-    /* AWS Console Light Theme Background */
+    /* Global Background and Typography (Inter-like modern sans-serif) */
     .stApp {
-        background-color: #f2f3f3;
-        color: #16191f;
-        font-family: "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
+        background-color: #fafbfc;
+        color: #1e293b;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     }
     
-    /* AWS Top Navigation Bar */
-    .aws-nav-bar {
-        background-color: #232f3e;
-        color: #ffffff;
-        padding: 10px 20px;
+    /* Top Navigation Header (Modern DocHub styled) */
+    .hub-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
-        border-radius: 2px;
-        box-shadow: 0 1px 4px 0 rgba(0,0,0,0.1);
+        padding: 16px 32px;
+        background-color: #ffffff;
+        border-bottom: 1px solid #f1f5f9;
+        margin-bottom: 30px;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
     }
-    .aws-nav-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin: 0;
-        letter-spacing: 0.5px;
+    .hub-logo {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: #4f46e5; /* Premium Indigo */
+        letter-spacing: -0.5px;
     }
-    .aws-nav-region {
+    .hub-status {
         font-size: 0.8rem;
-        background: #35475e;
-        padding: 3px 8px;
-        border-radius: 2px;
-        color: #d1d5db;
-        font-family: monospace;
+        font-weight: 500;
+        color: #64748b;
+        background: #f1f5f9;
+        padding: 4px 12px;
+        border-radius: 9999px;
+        border: 1px solid #e2e8f0;
     }
 
-    /* Console Page Header */
-    .console-header {
-        margin-bottom: 20px;
+    /* Hero Headline Section */
+    .hero-section {
+        text-align: center;
+        max-width: 750px;
+        margin: 0 auto 35px auto;
+        padding: 10px;
     }
-    .console-title {
-        font-size: 1.6rem;
-        font-weight: 600;
-        color: #16191f;
-        margin: 0 0 4px 0;
+    .hero-title {
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -1px;
+        line-height: 1.2;
+        margin-bottom: 12px;
     }
-    .console-desc {
-        font-size: 0.85rem;
-        color: #545b64;
-        margin: 0;
+    .hero-subtitle {
+        font-size: 1.05rem;
+        color: #64748b;
+        line-height: 1.5;
     }
-    
-    /* AWS White Container Cards */
-    .aws-container {
+
+    /* Premium Modern Cards (Soft shadows, rounded edges) */
+    .hub-card {
         background-color: #ffffff;
-        border: 1px solid #eaeded;
-        border-radius: 2px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
         padding: 24px;
-        margin-bottom: 16px;
-        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
-    .aws-container-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #16191f;
-        border-bottom: 1px solid #eaeded;
+    .hub-card:hover {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    }
+    .hub-card-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 14px;
+        border-bottom: 1px solid #f1f5f9;
         padding-bottom: 10px;
-        margin-bottom: 16px;
-        text-transform: capitalize;
     }
     
-    /* AWS Action Buttons */
+    /* Modern Query Search Input Area */
+    .search-container {
+        max-width: 680px;
+        margin: 0 auto 30px auto;
+        text-align: center;
+    }
+
+    /* Executive Intelligence Report Style */
+    .report-memo {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #4f46e5; /* Indigo Accent */
+        border-radius: 8px;
+        padding: 20px 24px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    }
+    .report-memo-header {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 6px;
+    }
+    
+    /* Clean Reference Segment Cards */
+    .segment-card {
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    }
+    .segment-card-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 6px;
+        margin-bottom: 10px;
+    }
+    
+    /* Indigo Buttons */
     .stButton > button {
-        background-color: #ec7211 !important; /* AWS Orange */
+        background-color: #4f46e5 !important;
         color: #ffffff !important;
-        border: 1px solid #ec7211 !important;
-        border-radius: 2px !important;
+        border: 1px solid #4f46e5 !important;
+        border-radius: 6px !important;
         font-size: 0.85rem !important;
         font-weight: 600 !important;
-        padding: 6px 16px !important;
-        transition: background-color 0.1s ease !important;
+        padding: 8px 18px !important;
+        transition: background-color 0.15s ease, transform 0.1s ease !important;
     }
     .stButton > button:hover {
-        background-color: #d05c08 !important;
-        border-color: #d05c08 !important;
+        background-color: #4338ca !important;
+        border-color: #4338ca !important;
+        transform: translateY(-0.5px);
     }
     
-    /* Secondary/Form buttons */
-    .stButton.secondary-btn > button {
-        background-color: #ffffff !important;
-        color: #545b64 !important;
-        border: 1px solid #545b64 !important;
-    }
-    .stButton.secondary-btn > button:hover {
-        background-color: #f2f3f3 !important;
-    }
-    
-    /* AWS Console Metric Tiles */
-    .aws-metric-tile {
-        border-left: 3px solid #0073bb; /* AWS Blue */
-        padding-left: 12px;
-        margin-bottom: 16px;
-    }
-    .aws-metric-label {
-        font-size: 0.75rem;
-        color: #545b64;
-        text-transform: uppercase;
-        font-weight: 500;
-        margin-bottom: 2px;
-    }
-    .aws-metric-value {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #16191f;
-    }
-    .aws-metric-value-cost {
-        color: #1d8102; /* Green for cost */
-    }
-
-    /* Executive Memo Block */
-    .memo-block {
-        background-color: #fafafa;
-        border: 1px solid #eaeded;
-        border-left: 4px solid #0073bb;
+    /* Analytical Metrics Grid */
+    .analytic-tile {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
         padding: 16px;
-        border-radius: 2px;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        color: #16191f;
-        margin-bottom: 20px;
+        text-align: center;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
-    .memo-header {
+    .analytic-label {
         font-size: 0.75rem;
-        font-weight: 700;
-        color: #545b64;
+        color: #64748b;
+        font-weight: 600;
         text-transform: uppercase;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
         letter-spacing: 0.5px;
     }
-    
-    /* Simple Monospace Overlap View */
-    .chunk-overlap-box {
-        background-color: #f8f9fa;
-        border: 1px solid #eaeded;
-        padding: 8px 12px;
-        font-family: monospace;
-        font-size: 0.8rem;
-        color: #24292e;
-        margin-bottom: 8px;
-        border-radius: 2px;
+    .analytic-val {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #0f172a;
     }
-    .overlap-tag {
-        color: #ec7211;
-        font-weight: bold;
-        background: #fdf2e9;
-        padding: 1px 3px;
-        border: 1px solid #fcd3b2;
-        border-radius: 2px;
+    .analytic-val-cost {
+        color: #0f766e;
     }
 
-    /* Minimalist Side-by-Side Diagnostic Rows */
-    .console-row {
-        border-bottom: 1px solid #eaeded;
-        padding: 10px 0;
+    /* Monospace Chunk Box */
+    .monobox {
+        background-color: #fafbfc;
+        border: 1px solid #e2e8f0;
+        border-radius: 6px;
+        padding: 10px 14px;
+        font-family: Menlo, Monaco, Consolas, monospace;
+        font-size: 0.8rem;
+        line-height: 1.4;
+        color: #334155;
+    }
+    .tag-overlap {
+        color: #4f46e5;
+        font-weight: bold;
+        background: #e0e7ff;
+        padding: 1px 4px;
+        border-radius: 3px;
+        margin-right: 4px;
+    }
+
+    /* Diagnostic Lists */
+    .diag-item {
+        border-bottom: 1px solid #f1f5f9;
+        padding: 8px 0;
         font-size: 0.8rem;
     }
-    .console-row:last-child {
+    .diag-item:last-child {
         border-bottom: none;
     }
-    
-    /* Form Label Styling */
-    .stTextInput label, .stSlider label {
-        font-size: 0.8rem !important;
-        font-weight: 600 !important;
-        color: #545b64 !important;
+    .badge-blue {
+        background-color: #e0f2fe;
+        color: #0369a1;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+    }
+    .badge-purple {
+        background-color: #f3e8ff;
+        color: #6b21a8;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-weight: 600;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# 1. AWS Top Navigation Bar
+# 1. Premium Header Navigation
 st.markdown("""
-<div class="aws-nav-bar">
-    <div class="aws-nav-title">Amazon Document Intelligence</div>
-    <div class="aws-nav-region">us-east-1 (N. Virginia)</div>
-</div>
-""", unsafe_allow_html=True)
-
-# 2. Console Page Header
-st.markdown("""
-<div class="console-header">
-    <div class="console-title">Document Indexing & Search Console</div>
-    <div class="console-desc">ETL ingestion workflows, hybrid vector retrieval query configurations, and token costing allocations.</div>
+<div class="hub-header">
+    <div class="hub-logo">DocHub</div>
+    <div class="hub-status">Enterprise Intelligence Hub • Active</div>
 </div>
 """, unsafe_allow_html=True)
 
@@ -222,126 +251,129 @@ if "last_response" not in st.session_state:
 if "results_list" not in st.session_state:
     st.session_state.results_list = []
 
-# Sidebar Configuration Settings
+# Sidebar Config
 with st.sidebar:
-    st.markdown("### System Gateways")
-    st.session_state.backend_url = st.text_input("REST Endpoint URL", value=st.session_state.backend_url)
+    st.markdown("### Settings")
+    st.session_state.backend_url = st.text_input("Endpoint Gateway", value=st.session_state.backend_url)
     
-    if st.button("Test Gateway Status"):
-        with st.spinner("Connecting..."):
+    if st.button("🔌 Verify Gateway"):
+        with st.spinner("Pinging gateway..."):
             try:
                 res = requests.get(f"{st.session_state.backend_url}/health", timeout=5)
                 if res.status_code == 200 and res.json().get("status") == "healthy":
                     st.session_state.connected = True
-                    st.success("API status: Active")
+                    st.success("API Status: Connected")
                 else:
                     st.session_state.connected = False
-                    st.error("API status: Offline")
+                    st.error("API Status: Offline")
             except Exception as e:
                 st.session_state.connected = False
-                st.error("API status: Offline")
+                st.error("API Status: Offline")
                 
     st.markdown("---")
-    st.markdown("### S3 Data Source Configuration")
-    s3_bucket = st.text_input("AWS S3 Bucket Name", value="enterprise-rag-lakehouse")
+    st.markdown("### Lakehouse Configuration")
+    s3_bucket = st.text_input("S3 Bucket", value="enterprise-rag-lakehouse")
     s3_prefix = st.text_input("S3 Directory Prefix", value="documents/")
     
-    if st.button("Sync S3 Bucket Objects"):
+    if st.button("🚀 Ingest from Lakehouse"):
         if not st.session_state.connected:
-            st.warning("API Gateway offline. Establish status first.")
+            st.warning("Connect to the API gateway first.")
         else:
-            with st.spinner("Downloading objects and running distributed PySpark ingestion..."):
+            with st.spinner("Synchronizing bucket and executing PySpark ingestion..."):
                 try:
                     payload = {"bucket": s3_bucket, "prefix": s3_prefix}
                     res = requests.post(f"{st.session_state.backend_url}/ingest/s3", json=payload, timeout=120)
                     if res.status_code == 200:
                         chunks = res.json().get("total_chunks")
-                        st.success(f"ETL completed: Ingested {chunks} segments to Pinecone.")
+                        st.success(f"Ingested {chunks} segments to Pinecone.")
                     else:
                         st.error(f"Sync failed: {res.json().get('detail')}")
                 except Exception as e:
                     st.error(f"Gateway connection failure: {e}")
 
-# AWS Management Console Tab Navigation (Clean, text-only styling)
+# Multi-Tab Workspaces (Modern Lovable styling)
 tabs = st.tabs([
-    "Query Sandbox", 
-    "Chunk Segmentation", 
+    "Document Search", 
+    "Chunk Visualizer", 
     "Retrieval Diagnostics", 
-    "Usage Billing"
+    "Cost Analytics"
 ])
 
 # ==========================================
-# TAB 1: Query Sandbox
+# TAB 1: Document Search Hub
 # ==========================================
 with tabs[0]:
-    col_main, col_side = st.columns([13, 6])
+    # Modern Centered Search Header
+    st.markdown("""
+    <div class="hero-section">
+        <div class="hero-title">Docs & Knowledge Hub</div>
+        <div class="hero-subtitle">Ingest, analyze, and query corporate resources in a secure, unified workspace powered by Spark and Pinecone.</div>
+    </div>
+    """, unsafe_allow_html=True)
     
-    with col_side:
-        # Document uploading options container
-        st.markdown("""
-        <div class="aws-container">
-            <div class="aws-container-title">Ingest Local Document</div>
-        """, unsafe_allow_html=True)
+    col_portal, col_uploads = st.columns([12, 6])
+    
+    with col_uploads:
+        # File uploads card
+        st.markdown('<div class="hub-card">', unsafe_allow_html=True)
+        st.markdown('<div class="hub-card-title">Upload Documents</div>', unsafe_allow_html=True)
         
         uploaded_file = st.file_uploader("Upload local PDF or TXT file", type=["pdf", "txt"], label_visibility="collapsed")
         if uploaded_file is not None:
-            if st.button("Upload & Index Document"):
+            if st.button("Process Document"):
                 if not st.session_state.connected:
-                    st.warning("Gateway connection offline.")
+                    st.warning("Establish Gateway connection in the sidebar settings first.")
                 else:
-                    with st.spinner("Parsing text and index loaders..."):
+                    with st.spinner("Extracting and loading document..."):
                         try:
                             files = {"file": (uploaded_file.name, uploaded_file.getvalue(), uploaded_file.type)}
                             res = requests.post(f"{st.session_state.backend_url}/upload", files=files, timeout=60)
                             if res.status_code == 200:
                                 total_chunks = res.json().get("total_chunks")
-                                st.success(f"File uploaded. Created {total_chunks} index vectors.")
+                                st.success(f"Indexed document into {total_chunks} segments.")
                             else:
                                 st.error(f"Processing error: {res.json().get('detail')}")
                         except Exception as e:
-                            st.error(f"Network error during upload: {e}")
+                            st.error(f"Network upload error: {e}")
         st.markdown("</div>", unsafe_allow_html=True)
         
-        # Batch seeding container
-        st.markdown("""
-        <div class="aws-container">
-            <div class="aws-container-title">Distributed Batch Seed</div>
-            <p style="font-size: 0.8rem; color: #545b64; margin-top: 0; margin-bottom: 12px;">
-                Triggers a local distributed PySpark job to clean, chunk, and index 1,000 synthetic log records.
-            </p>
-        """, unsafe_allow_html=True)
-        if st.button("Run Batch Ingestion Seed"):
+        # Batch seeding card
+        st.markdown('<div class="hub-card">', unsafe_allow_html=True)
+        st.markdown('<div class="hub-card-title">PySpark Batch ETL</div>', unsafe_allow_html=True)
+        st.markdown("<p style='font-size:0.8rem; color:#64748b; margin-top:0;'>Run distributed Spark cleanup and embedding nodes to seed the vector database.</p>", unsafe_allow_html=True)
+        if st.button("Run Spark Seeding Pipeline"):
             if not st.session_state.connected:
-                st.warning("Gateway connection offline.")
+                st.warning("Establish Gateway connection first.")
             else:
-                with st.spinner("Executing PySpark ingestion job..."):
+                with st.spinner("Executing PySpark ETL job..."):
                     try:
                         res = requests.post(f"{st.session_state.backend_url}/ingest", timeout=120)
                         if res.status_code == 200:
-                            st.success(f"PySpark job complete. Created {res.json().get('total_chunks')} segments.")
+                            st.success(f"Spark loaded {res.json().get('total_chunks')} segments successfully.")
                         else:
                             st.error(res.json().get("detail"))
                     except Exception as e:
-                        st.error(f"Execution error: {e}")
+                        st.error(f"ETL pipeline failure: {e}")
         st.markdown("</div>", unsafe_allow_html=True)
 
-    with col_main:
-        # Search panel container
-        st.markdown("""
-        <div class="aws-container">
-            <div class="aws-container-title">Natural Language Queries</div>
-        """, unsafe_allow_html=True)
+    with col_portal:
+        st.markdown('<div class="hub-card">', unsafe_allow_html=True)
+        st.markdown('<div class="hub-card-title">Search Sandbox</div>', unsafe_allow_html=True)
         
+        # Modern Search Input Box
+        st.markdown('<div class="search-container">', unsafe_allow_html=True)
         query = st.text_input(
-            "Execute retrieval search queries against the document database:",
-            placeholder="Type query to retrieve and synthesize..."
+            "Ask a question to retrieve matched knowledge:",
+            placeholder="Type query to retrieve...",
+            label_visibility="collapsed"
         )
+        st.markdown('</div>', unsafe_allow_html=True)
         
         if query:
             if not st.session_state.connected:
-                st.warning("Gateway offline. Configure connection in the sidebar.")
+                st.warning("API Gateway offline. Verify connection in the sidebar.")
             else:
-                with st.spinner("Retrieving database matches..."):
+                with st.spinner("Querying indexes..."):
                     try:
                         payload = {"query": query, "top_k_hybrid": 30, "top_k_rerank": 5}
                         response = requests.post(f"{st.session_state.backend_url}/query", json=payload, timeout=20)
@@ -349,7 +381,7 @@ with tabs[0]:
                         if response.status_code == 200:
                             res_data = response.json()
                             
-                            # Cache latest queries for Diagnostics
+                            # Cache search queries for Diagnostics
                             st.session_state.last_query = query
                             st.session_state.last_response = res_data
                             
@@ -359,52 +391,44 @@ with tabs[0]:
                                 "results": res_data["results"]
                             }]
                         else:
-                            st.error("Retrieval gateway error.")
+                            st.error("Error executing query against gateway.")
                     except Exception as e:
-                        st.error(f"Network request failed: {e}")
+                        st.error(f"Network error: {e}")
                         
-        # Display current query result memo block
+        # Displays the Query output as a clean executive memorandum
         if st.session_state.results_list:
             active = st.session_state.results_list[0]
             
             st.markdown(f"""
-            <div class="memo-block">
-                <div class="memo-header">Synthesized Response Summary</div>
+            <div class="report-memo">
+                <div class="report-memo-header">Executive Summary Report</div>
                 <div>{active['answer']}</div>
             </div>
             """, unsafe_allow_html=True)
             
-            # Displays retrieved sources in a clean, compact, non-crowded list
-            st.markdown("#### Retrieved Database Sources")
+            # Displays retrieved source documents cleanly without cluttering the screen
+            st.markdown("#### Matched Reference Documents")
             for idx, item in enumerate(active["results"]):
-                # Truncate content preview to prevent visual clutter
-                preview_text = item["chunk_text"][:240] + "..." if len(item["chunk_text"]) > 240 else item["chunk_text"]
-                
-                with st.expander(f"Source Document {idx+1} (Doc: {item['doc_id'][:12]}... • Segment: {item['chunk_index']})"):
+                with st.expander(f"Reference Segment {idx+1} (Doc: {item['doc_id'][:12]}... • Index: {item['chunk_index']})"):
                     st.markdown(f"""
-                    <div style="font-size: 0.85rem; color: #16191f; line-height: 1.5; background: #fafafa; padding: 12px; border: 1px solid #eaeded; border-radius: 2px;">
+                    <div style="font-size: 0.85rem; color: #334155; line-height: 1.5; background: #fafafa; padding: 12px; border: 1px solid #e2e8f0; border-radius: 4px;">
                         "{item['chunk_text']}"
                     </div>
                     """, unsafe_allow_html=True)
         st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
-# TAB 2: Chunk Segmentation
+# TAB 2: Chunk Visualizer
 # ==========================================
 with tabs[1]:
-    st.markdown("""
-    <div class="aws-container">
-        <div class="aws-container-title">Interactive Segment Splitting</div>
-        <p style="font-size: 0.8rem; color: #545b64; margin-top: 0; margin-bottom: 20px;">
-            Configure characters and overlap sliders to visualize document parsing boundaries.
-        </p>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="hub-card">', unsafe_allow_html=True)
+    st.markdown('<div class="hub-card-title">Interactive Segmentation Visualizer</div>', unsafe_allow_html=True)
     
-    col_args, col_view = st.columns([1, 1])
+    col_arg, col_txt = st.columns([1, 1])
     
-    with col_args:
+    with col_arg:
         text_input = st.text_area(
-            "Reference Text Document Content",
+            "Target Parsing Document Block",
             value=(
                 "CLINICAL HEALTH REPORT - REGION 5\n"
                 "Patient Bob Jones (age 45) was admitted to St. Jude Clinical Unit on 2026-06-15. "
@@ -421,17 +445,17 @@ with tabs[1]:
                 "Description: Gateway Database session connection timeouts were observed at 14:02 UTC. "
                 "Resolution: Restarted database endpoint pool, cleared transaction locks. Service restored."
             ),
-            height=240
+            height=230
         )
-        ch_size = st.slider("Target Segment Length (Chars)", 100, 800, 300, step=50)
-        ch_overlap = st.slider("Segment Overlap Length (Chars)", 10, 200, 50, step=10)
+        ch_size = st.slider("Target Segment size (Chars)", 100, 800, 300, step=50)
+        ch_overlap = st.slider("Target Overlap Size (Chars)", 10, 200, 50, step=10)
         
-    with col_view:
+    with col_txt:
         from src.utils.chunker import RecursiveCharacterChunker
         chunker = RecursiveCharacterChunker(chunk_size=ch_size, chunk_overlap=ch_overlap)
         chunks = chunker.chunk_text(text_input)
         
-        st.markdown(f"**Total Segments Generated**: `{len(chunks)}` blocks")
+        st.markdown(f"**Total Segments Formed**: `{len(chunks)}` blocks")
         
         for idx, chunk in enumerate(chunks):
             overlap_prefix = ""
@@ -451,15 +475,15 @@ with tabs[1]:
             st.markdown(f"**Segment {idx+1}** ({len(chunk)} chars):")
             if overlap_prefix:
                 st.markdown(f"""
-                <div class="chunk-overlap-box">
-                    <span class="overlap-tag">Overlap:</span> {overlap_prefix}
-                    <span style="color: #545b64;">{body_text}</span>
+                <div class="monobox">
+                    <span class="tag-overlap">Overlap:</span>{overlap_prefix}
+                    <span style="color: #64748b;">{body_text}</span>
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 st.markdown(f"""
-                <div class="chunk-overlap-box" style="border-left: 3px solid #0073bb;">
-                    <span style="color: #545b64;">{body_text}</span>
+                <div class="monobox" style="border-left: 3px solid #4f46e5;">
+                    <span style="color: #64748b;">{body_text}</span>
                 </div>
                 """, unsafe_allow_html=True)
                 
@@ -469,10 +493,8 @@ with tabs[1]:
 # TAB 3: Retrieval Diagnostics
 # ==========================================
 with tabs[2]:
-    st.markdown("""
-    <div class="aws-container">
-        <div class="aws-container-title">Query Processing Diagnostics</div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="hub-card">', unsafe_allow_html=True)
+    st.markdown('<div class="hub-card-title">Two-Stage Retrieval Diagnostic Flow</div>', unsafe_allow_html=True)
     
     if not st.session_state.last_response:
         st.info("Execute a search query in the Sandbox (Tab 1) to inspect diagnostics.")
@@ -480,66 +502,63 @@ with tabs[2]:
         active_q = st.session_state.last_query
         res_payload = st.session_state.last_response
         
-        st.markdown(f"**Selected Search Query**: *'{active_q}'*")
+        st.markdown(f"**Search Query**: *'{active_q}'*")
         
-        # Diagnostics comparison data list
         comparisons = []
         for idx, item in enumerate(res_payload["results"]):
             comparisons.append({
                 "Rank": idx + 1,
-                "Document Name": item["doc_id"][:12] + "...",
+                "Doc ID": item["doc_id"][:12] + "...",
                 "Segment ID": item["chunk_index"],
                 "Stage 1 DB Score": f"{item['score']:.4f}",
                 "Stage 2 Rerank Score": f"{item['rerank_score']:.4f}",
-                "Snippet Excerpt": item["chunk_text"][:95] + "..."
+                "Excerpt": item["chunk_text"][:95] + "..."
             })
         df_diag = pd.DataFrame(comparisons)
         
         st.dataframe(df_diag, use_container_width=True)
         
-        st.markdown("### Stage 1 vs Stage 2 Rank Realignment")
+        st.markdown("### Top Candidate Re-ranking Alignment")
         col_st1, col_st2 = st.columns(2)
         
         with col_st1:
-            st.markdown("#### Stage 1: Database Hits (Sorted by RRF Score)")
+            st.markdown("#### Stage 1: Raw Pinecone Hits (RRF Score)")
             st1_ordered = sorted(res_payload["results"], key=lambda x: x["score"], reverse=True)
             for idx, item in enumerate(st1_ordered[:3]):
                 st.markdown(f"""
-                <div class="console-row">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                        <span style="font-weight: 600;">Match {idx+1} | Segment: {item['chunk_index']}</span>
-                        <span class="badge-rrf">Score: {item['score']:.4f}</span>
+                <div class="diag-item">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px; font-weight: 600;">
+                        <span>Match {idx+1} | Segment: {item['chunk_index']}</span>
+                        <span class="badge-blue">DB: {item['score']:.4f}</span>
                     </div>
-                    <div style="color: #545b64;">{item['chunk_text'][:120]}...</div>
+                    <div style="color: #64748b;">{item['chunk_text'][:120]}...</div>
                 </div>
                 """, unsafe_allow_html=True)
                 
         with col_st2:
-            st.markdown("#### Stage 2: Cross-Encoder Rerank (Sorted by Final Score)")
+            st.markdown("#### Stage 2: Reranked Matches (Relevance Score)")
             for idx, item in enumerate(res_payload["results"][:3]):
                 st.markdown(f"""
-                <div class="console-row">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                        <span style="font-weight: 600;">Rank {idx+1} | Segment: {item['chunk_index']}</span>
-                        <span class="badge-rerank">Score: {item['rerank_score']:.4f}</span>
+                <div class="diag-item">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px; font-weight: 600;">
+                        <span>Rank {idx+1} | Segment: {item['chunk_index']}</span>
+                        <span class="badge-purple">Rerank: {item['rerank_score']:.4f}</span>
                     </div>
-                    <div style="color: #16191f;">{item['chunk_text'][:120]}...</div>
+                    <div style="color: #1e293b;">{item['chunk_text'][:120]}...</div>
                 </div>
                 """, unsafe_allow_html=True)
                 
     st.markdown("</div>", unsafe_allow_html=True)
 
 # ==========================================
-# TAB 4: Usage Billing
+# TAB 4: Cost Analytics
 # ==========================================
 with tabs[3]:
-    st.markdown("""
-    <div class="aws-container">
-        <div class="aws-container-title">Operational Billing Analytics</div>
-    """, unsafe_allow_html=True)
+    st.markdown('<div class="hub-card">', unsafe_allow_html=True)
+    st.markdown('<div class="hub-card-title">Token Billing & Operational Analytics</div>', unsafe_allow_html=True)
     
     if not st.session_state.connected:
-        st.warning("Gateway connection offline. Establish gateway status in the sidebar.")
+        st.warning("Gateway connection offline. Establish connection settings in the sidebar.")
     else:
         try:
             res_an = requests.get(f"{st.session_state.backend_url}/analytics", timeout=5)
@@ -551,38 +570,38 @@ with tabs[3]:
                 
                 with col1:
                     st.markdown(f"""
-                    <div class="aws-metric-tile">
-                        <div class="aws-metric-label">Estimated Monthly Bill</div>
-                        <div class="aws-metric-value aws-metric-value-cost">${an_data['total_cost']:.6f}</div>
+                    <div class="analytic-tile">
+                        <div class="analytic-label">Accumulated Cost</div>
+                        <div class="analytic-val analytic-val-cost">${an_data['total_cost']:.6f}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with col2:
                     st.markdown(f"""
-                    <div class="aws-metric-tile">
-                        <div class="aws-metric-label">Billing Tokens Count</div>
-                        <div class="aws-metric-value">{an_data['total_tokens']:,}</div>
+                    <div class="analytic-tile">
+                        <div class="analytic-label">Billing Tokens Count</div>
+                        <div class="analytic-val">{an_data['total_tokens']:,}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with col3:
                     st.markdown(f"""
-                    <div class="aws-metric-tile">
-                        <div class="aws-metric-label">Queries Executed</div>
-                        <div class="aws-metric-value">{an_data['total_queries']}</div>
+                    <div class="analytic-tile">
+                        <div class="analytic-label">Queries Run</div>
+                        <div class="analytic-val" style="color: #4f46e5;">{an_data['total_queries']}</div>
                     </div>
                     """, unsafe_allow_html=True)
                 with col4:
                     st.markdown(f"""
-                    <div class="aws-metric-tile">
-                        <div class="aws-metric-label">ETL Ingestion Pipelines</div>
-                        <div class="aws-metric-value">{an_data['total_ingests']}</div>
+                    <div class="analytic-tile">
+                        <div class="analytic-label">Pipelines Executed</div>
+                        <div class="analytic-val" style="color: #0f766e;">{an_data['total_ingests']}</div>
                     </div>
                     """, unsafe_allow_html=True)
                     
-                st.markdown("### Billing Cost Allocation")
+                st.markdown("### Resource Billing Breakdown")
                 breakdown = an_data["cost_breakdown"]
                 
                 df_chart = pd.DataFrame({
-                    "Component": ["Embeddings (BGE)", "Reranker Model", "LLM Input Prompt", "LLM Text Generation", "Pinecone DB Writes"],
+                    "Component": ["Embeddings (BGE)", "Reranker Model", "LLM Prompt Input", "LLM Text Generation", "Pinecone DB Writes"],
                     "Cost ($)": [
                         breakdown["embedding"],
                         breakdown["rerank"],
@@ -592,34 +611,34 @@ with tabs[3]:
                     ]
                 })
                 
-                # Renders AWS styled bar chart
+                # Altair bar chart styled in modern indigo
                 chart = alt.Chart(df_chart).mark_bar(
-                    size=24,
-                    cornerRadiusTopLeft=1,
-                    cornerRadiusTopRight=1
+                    size=26,
+                    cornerRadiusTopLeft=4,
+                    cornerRadiusTopRight=4
                 ).encode(
-                    x=alt.X("Component:N", sort=None, title="Service Layer Component"),
-                    y=alt.Y("Cost ($):Q", title="Billing Cost (USD)"),
-                    color=alt.value("#0073bb"),  # AWS Blue
+                    x=alt.X("Component:N", sort=None, title="ETL / Query Service Layer"),
+                    y=alt.Y("Cost ($):Q", title="Cost (USD)"),
+                    color=alt.value("#4f46e5"),  # Indigo
                     tooltip=["Component", "Cost ($)"]
                 ).properties(
-                    height=280
+                    height=290
                 )
                 
                 st.altair_chart(chart, use_container_width=True)
                 
-                with st.expander("Show Detailed Model Rate Pricing Catalog"):
+                with st.expander("Rate Table Catalog Rate"):
                     st.markdown("""
-                    **Model Catalog Rates:**
-                    * **BGE-small Embedding**: `$0.00002` / 1,000 tokens
-                    * **Cross-Encoder Rerank**: `$0.00010` / 1,000 tokens
-                    * **LLM Prompt Input**: `$0.00150` / 1,000 tokens
-                    * **LLM Generation Output**: `$0.00200` / 1,000 tokens
-                    * **Pinecone Serverless writes**: `$0.00100` / 1,000 vectors
+                    Operational pricing parameters utilized for billing calculations:
+                    - **Embedding (BGE-small)**: `$0.00002` / 1,000 tokens
+                    - **Reranker (Cross-Encoder)**: `$0.00010` / 1,000 tokens
+                    - **LLM Input Context**: `$0.00150` / 1,000 tokens
+                    - **LLM Output Completion**: `$0.00200` / 1,000 tokens
+                    - **Pinecone Serverless updates**: `$0.00100` / 1,000 vectors
                     """)
             else:
-                st.error("Could not load billing details.")
+                st.error("Could not fetch billing details.")
         except Exception as e:
-            st.error(f"Analytics connection error: {e}")
+            st.error(f"Analytics gateway connection error: {e}")
             
     st.markdown("</div>", unsafe_allow_html=True)
