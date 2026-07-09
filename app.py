@@ -384,28 +384,34 @@ with tabs[0]:
         
         uploaded_file = st.file_uploader("Upload local PDF or TXT file", type=["pdf", "txt"], label_visibility="collapsed")
         if uploaded_file is not None:
+            # Cache the file text in session state for the visualizer
+            if "uploaded_file_name" not in st.session_state or st.session_state.uploaded_file_name != uploaded_file.name:
+                try:
+                    contents = uploaded_file.getvalue()
+                    if uploaded_file.name.lower().endswith(".pdf"):
+                        pdf_file = io.BytesIO(contents)
+                        reader = pypdf.PdfReader(pdf_file)
+                        text_list = []
+                        for page in reader.pages:
+                            p_txt = page.extract_text()
+                            if p_txt:
+                                text_list.append(p_txt)
+                        text = " ".join(text_list)
+                    else:
+                        text = contents.decode("utf-8", errors="ignore")
+                    
+                    st.session_state.uploaded_text = text
+                    st.session_state.uploaded_file_name = uploaded_file.name
+                except Exception:
+                    pass
+
             if st.button("Process Document"):
                 # Check for REST connection. If offline, use native fallback in-process execution!
                 if not st.session_state.connected:
                     with st.spinner("Processing locally (Local Fallback)..."):
                         try:
-                            # 1. Parse text from uploaded file
-                            contents = uploaded_file.getvalue()
-                            filename = uploaded_file.name.lower()
-                            text = ""
-                            
-                            if filename.endswith(".pdf"):
-                                pdf_file = io.BytesIO(contents)
-                                reader = pypdf.PdfReader(pdf_file)
-                                text_list = []
-                                for page in reader.pages:
-                                    p_txt = page.extract_text()
-                                    if p_txt:
-                                        text_list.append(p_txt)
-                                text = " ".join(text_list)
-                            else:
-                                text = contents.decode("utf-8", errors="ignore")
-                                
+                            # 1. Retrieve text from session cache
+                            text = st.session_state.get("uploaded_text", "")
                             cleaned_text = " ".join(text.strip().split())
                             if not cleaned_text:
                                 st.error("Uploaded file contains no readable text.")
@@ -591,9 +597,10 @@ with tabs[1]:
     col_arg, col_txt = st.columns([1, 1])
     
     with col_arg:
-        text_input = st.text_area(
-            "Target Parsing Document Block",
-            value=(
+        # Default placeholder text if no file is uploaded yet
+        default_text = st.session_state.get("uploaded_text", "")
+        if not default_text:
+            default_text = (
                 "CLINICAL HEALTH REPORT - REGION 5\n"
                 "Patient Bob Jones (age 45) was admitted to St. Jude Clinical Unit on 2026-06-15. "
                 "The patient presented with elevated blood pressure and dry throat symptoms. "
@@ -608,7 +615,11 @@ with tabs[1]:
                 "Category: Infrastructure Outage. "
                 "Description: Gateway Database session connection timeouts were observed at 14:02 UTC. "
                 "Resolution: Restarted database endpoint pool, cleared transaction locks. Service restored."
-            ),
+            )
+            
+        text_input = st.text_area(
+            "Target Parsing Document Block",
+            value=default_text,
             height=230
         )
         ch_size = st.slider("Target Segment size (Chars)", 100, 800, 300, step=50)
